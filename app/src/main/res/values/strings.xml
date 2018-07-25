@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">MoviesApp</string>
+
+    <!--Strings for activity_main layout-->
+    <string name="non_loading_message">There has been an error, please refresh to update content</string>
 </resources>
