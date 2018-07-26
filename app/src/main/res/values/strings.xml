@@ -5,6 +5,23 @@
     <string name="preferences">Preferences</string>
     <string name="preferences_title">Movies preferences</string>
 
+    <!--Strings for preferences-->
+    <string name="list_title">Show Movies by:</string>
+    <string name="criteria_key">criteria</string>
+    <string-array name="criteria_entries">
+        <item>Now playing</item>
+        <item>Most popular</item>
+        <item>Top rated</item>
+        <item>Upcoming</item>
+    </string-array>
+    <string-array name="criteria_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string name="criteria_default">0</string>
+
     <!--Strings for activity_main layout-->
     <string name="non_loading_message">There has been an error, please refresh to update content</string>
 
