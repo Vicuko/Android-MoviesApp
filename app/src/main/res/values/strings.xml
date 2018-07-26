@@ -3,9 +3,9 @@
 
     <!--Strings for menu elements-->
     <string name="preferences">Preferences</string>
+    <string name="preferences_title">Movies preferences</string>
 
     <!--Strings for activity_main layout-->
     <string name="non_loading_message">There has been an error, please refresh to update content</string>
-    <string name="title_activity_settings">Settings</string>
 
 </resources>
