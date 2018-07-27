@@ -15,12 +15,12 @@
         <item>Upcoming</item>
     </string-array>
     <string-array name="criteria_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+        <item>now_playing</item>
+        <item>popular</item>
+        <item>top_rated</item>
+        <item>upcoming</item>
     </string-array>
-    <string name="criteria_default">0</string>
+    <string name="criteria_default">now_playing</string>
 
     <!--Strings for activity_main layout-->
     <string name="non_loading_message">There has been an error, please refresh to update content</string>
