@@ -1,10 +1,7 @@
 package com.example.android.moviesapp.utilities;
 
-import android.content.res.Resources;
 import android.net.Uri;
 import android.util.Log;
-
-import com.example.android.moviesapp.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,12 +25,14 @@ public class NetworkUtils {
     final static String LANGUAGE_PARAM = "language";
     final static String PAGE_PARAM = "page";
 
-    private static final String api_key = "";
+    private static final String api_key = "40e9ea841bf98e2c2fd188cbe76dd5b3";
     private static final String language = "en-US";
     private static final int page = 1;
 
     public static URL buildUrl(String filter_criteria) {
-        String defaultCriteria = Resources.getSystem().getString(R.string.criteria_default);
+//        String defaultCriteria = Resources.getSystem().getString(R.string.criteria_default);
+        //Pendiente de coger dato de las preferencias para esta parte.
+        String defaultCriteria = "now_playing";
         filter_criteria = !filter_criteria.isEmpty() ? filter_criteria : defaultCriteria;
 
         Uri builtUri = Uri.parse(TMDB_URL).buildUpon()

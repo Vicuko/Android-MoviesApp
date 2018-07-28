@@ -31,7 +31,7 @@ public class MoviesJsonUtils {
         final String MOVIE_POSTER_URL = "poster_url";
 
         final String TMDB_POSTERS_URL = "http://image.tmdb.org/t/p/";
-        final String POSTER_SIZE = "w92";
+        final String POSTER_SIZE = "w300";
 
         HashMap[] parsedMoviesData = null;
 
@@ -62,15 +62,17 @@ public class MoviesJsonUtils {
 
             Uri builtUri = Uri.parse(TMDB_POSTERS_URL).buildUpon()
                     .appendPath(POSTER_SIZE)
-                    .appendPath(posterPath)
+                    .appendEncodedPath(posterPath)
                     .build();
 
-            URL posterUrl = null;
+            URL url = null;
             try {
-                posterUrl = new URL(builtUri.toString());
+                url = new URL(builtUri.toString());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
+
+            String posterUrl = url.toString();
 
             movieHash.put(MOVIE_ID, id);
             movieHash.put(MOVIE_VOTE, voteAverage);

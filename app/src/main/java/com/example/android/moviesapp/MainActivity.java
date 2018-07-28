@@ -19,6 +19,8 @@ import com.example.android.moviesapp.utilities.NetworkUtils;
 import java.net.URL;
 import java.util.HashMap;
 
+import static android.widget.GridLayout.VERTICAL;
+
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
 
     private RecyclerView mRecyclerView;
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mRecyclerView = (RecyclerView) findViewById(R.id.movies_recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new GridLayoutManager(this,2);
+        mLayoutManager = new GridLayoutManager(this,2, VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mMoviesAdapter = new MoviesAdapter(this);
