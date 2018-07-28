@@ -1,7 +1,10 @@
 package com.example.android.moviesapp.utilities;
 
+import android.content.res.Resources;
 import android.net.Uri;
 import android.util.Log;
+
+import com.example.android.moviesapp.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +33,9 @@ public class NetworkUtils {
     private static final int page = 1;
 
     public static URL buildUrl(String filter_criteria) {
+        String defaultCriteria = Resources.getSystem().getString(R.string.criteria_default);
+        filter_criteria = !filter_criteria.isEmpty() ? filter_criteria : defaultCriteria;
+
         Uri builtUri = Uri.parse(TMDB_URL).buildUpon()
                 .appendPath(MOVIE_SEARCH)
                 .appendPath(filter_criteria)
