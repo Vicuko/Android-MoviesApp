@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 //        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, weatherForDay);
 //        startActivity(intentToStartDetailActivity);
         String toastText = getResources().getString(R.string.toast_message, adapterPosition);
-        Toast.makeText(this,toastText,Toast.LENGTH_LONG);
+        Toast.makeText(this,toastText,Toast.LENGTH_LONG).show();
     }
 
     public class FetchMoviesTask extends AsyncTask<String, Void, HashMap[]>{
