@@ -10,17 +10,19 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+
 /**
  * Created by Vicuko on 27/7/18.
  */
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
-    private String[] mMoviesData;
+    private HashMap[] mMoviesData;
 
     private final MoviesAdapterOnClickHandler mClickHandler;
 
     public interface MoviesAdapterOnClickHandler {
-        void onClick(String dataForDetail, int adapterPosition);
+        void onClick(HashMap dataForDetail, int adapterPosition);
     }
 
     public MoviesAdapter(MoviesAdapterOnClickHandler clickHandler) {
@@ -39,7 +41,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         @Override
         public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
-            String dataForDetail = mMoviesData[adapterPosition];
+            HashMap dataForDetail = mMoviesData[adapterPosition];
             mClickHandler.onClick(dataForDetail, adapterPosition);
         }
     }
@@ -58,7 +60,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     @Override
     public void onBindViewHolder(@NonNull MoviesAdapterViewHolder holder, int position) {
-        String posterForThisMovie = mMoviesData[position];
+        final String MOVIE_POSTER_URL = "poster_url";
+        String posterForThisMovie = (String) mMoviesData[position].get(MOVIE_POSTER_URL);
         Picasso.get().load(posterForThisMovie).into(holder.mMovieImageView);
     }
 
@@ -68,7 +71,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         return mMoviesData.length;
     }
 
-    public void setMoviesData(String[] moviesData) {
+    public void setMoviesData(HashMap[] moviesData) {
         mMoviesData = moviesData;
         notifyDataSetChanged();
     }

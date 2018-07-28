@@ -17,6 +17,7 @@ import com.example.android.moviesapp.utilities.MoviesJsonUtils;
 import com.example.android.moviesapp.utilities.NetworkUtils;
 
 import java.net.URL;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
 
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     }
 
     @Override
-    public void onClick(String dataForDetail, int adapterPosition) {
+    public void onClick(HashMap dataForDetail, int adapterPosition) {
         //Code for carrying out an intent to the detail activity passing on the information
 //        Context context = this;
 //        Class destinationClass = DetailActivity.class;
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         Toast.makeText(this,toastText,Toast.LENGTH_LONG);
     }
 
-    public class FetchMoviesTask extends AsyncTask<String, Void, String[]>{
+    public class FetchMoviesTask extends AsyncTask<String, Void, HashMap[]>{
 
         @Override
         protected void onPreExecute() {
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         }
 
         @Override
-        protected String[] doInBackground(String... params) {
+        protected HashMap[] doInBackground(String... params) {
             if (params.length == 0) {
                 return null;
             }
@@ -111,8 +112,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 String jsonMoviesResponse = NetworkUtils
                         .getResponseFromHttpUrl(moviesRequestUrl);
 
-                String[] simpleJsonMoviesData = MoviesJsonUtils
-                        .getMoviesInfoStringsFromJson(MainActivity.this, jsonMoviesResponse);
+                HashMap[] simpleJsonMoviesData = MoviesJsonUtils
+                        .getMoviesInfoFromJson(MainActivity.this, jsonMoviesResponse);
 
                 return simpleJsonMoviesData;
 
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         }
 
         @Override
-        protected void onPostExecute(String[] moviesData) {
+        protected void onPostExecute(HashMap[] moviesData) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (moviesData!= null) {
                 showPosters();

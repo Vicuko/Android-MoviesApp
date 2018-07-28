@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 public class MoviesJsonUtils {
 
-    public static HashMap[] getMoviesInfoStringsFromJson(Context context, String moviesJsonStr)
+    public static HashMap[] getMoviesInfoFromJson(Context context, String moviesJsonStr)
             throws JSONException {
 
         final String TAG = MoviesJsonUtils.class.getSimpleName();
@@ -28,6 +28,7 @@ public class MoviesJsonUtils {
         final String MOVIE_ID = "id";
         final String MOVIE_VOTE = "vote_average";
         final String MOVIE_POSTER_PATH = "poster_path";
+        final String MOVIE_POSTER_URL = "poster_url";
 
         final String TMDB_POSTERS_URL = "http://image.tmdb.org/t/p/";
         final String POSTER_SIZE = "w92";
@@ -73,7 +74,7 @@ public class MoviesJsonUtils {
 
             movieHash.put(MOVIE_ID, id);
             movieHash.put(MOVIE_VOTE, voteAverage);
-            movieHash.put(MOVIE_POSTER_PATH, posterUrl);
+            movieHash.put(MOVIE_POSTER_URL, posterUrl);
 
             parsedMoviesData[i] = movieHash;
         }
