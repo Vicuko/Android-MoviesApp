@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.moviesapp.utilities.MoviesJsonUtils;
 import com.example.android.moviesapp.utilities.NetworkUtils;
 
 import java.net.URL;
@@ -110,10 +111,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 String jsonMoviesResponse = NetworkUtils
                         .getResponseFromHttpUrl(moviesRequestUrl);
 
-                String[] simpleJsonWeatherData = OpenWeatherJsonUtils
-                        .getSimpleWeatherStringsFromJson(MainActivity.this, jsonWeatherResponse);
+                String[] simpleJsonMoviesData = MoviesJsonUtils
+                        .getMoviesInfoStringsFromJson(MainActivity.this, jsonMoviesResponse);
 
-                return simpleJsonWeatherData;
+                return simpleJsonMoviesData;
 
             } catch (Exception e) {
                 e.printStackTrace();

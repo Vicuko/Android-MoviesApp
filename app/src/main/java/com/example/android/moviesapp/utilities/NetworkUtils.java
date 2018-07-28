@@ -21,7 +21,7 @@ public class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    private static final String TMDB_URL = "http://my-json-feed";
+    private static final String TMDB_URL = "https://api.themoviedb.org/3";
     private static final String MOVIE_SEARCH = "movie";
 
     final static String API_KEY_PARAM = "api_key";
