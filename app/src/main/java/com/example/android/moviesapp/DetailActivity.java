@@ -6,20 +6,27 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.android.moviesapp.utilities.MoviesJsonUtils;
 import com.example.android.moviesapp.utilities.NetworkUtils;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayer.OnInitializedListener;
+import com.google.android.youtube.player.YouTubePlayerFragment;
 
 import java.net.URL;
 import java.util.HashMap;
 
 public class DetailActivity extends AppCompatActivity {
 
+    private static final String TAG = DetailActivity.class.getSimpleName();
     private HashMap mMovieDetail;
-    private HashMap mGenres;
     private ProgressBar mLoadingIndicator;
+    private YouTubePlayerFragment mYouTubePlayerFragment;
+    private YouTubePlayer mYouTubePlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +42,35 @@ public class DetailActivity extends AppCompatActivity {
                 mMovieDetail = (HashMap) intentThatStartedThisActivity.getSerializableExtra(Intent.EXTRA_TEXT);
                 setTitle((String) mMovieDetail.get("title"));
                 new FetchDetailsTask().execute((String) mMovieDetail.get("id"));
-            }
-            else{
+            } else {
 //                showError();
             }
         }
+        initializeYouTubePlayer("wb49-oV0F78");
+    }
+
+    private void initializeYouTubePlayer(final String video_key) {
+        String api_key = getApplicationContext().getResources().getString(R.string.youtube_api_key);
+        mYouTubePlayerFragment = (YouTubePlayerFragment) getFragmentManager().findFragmentById(R.id.trailer_youtube_view);
+
+        if (mYouTubePlayerFragment == null)
+            return;
+
+        mYouTubePlayerFragment.initialize(api_key, new OnInitializedListener() {
+            @Override
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+                if (!wasRestored) {
+                    mYouTubePlayer = player;
+                    mYouTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+                    mYouTubePlayer.cueVideo(video_key);
+                }
+            }
+
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+                Log.e(TAG, "YouTube Player View initialization failed");
+            }
+        });
     }
 
     public class FetchDetailsTask extends AsyncTask<String, Void, HashMap> {
@@ -77,14 +108,14 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(HashMap movieDetails) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (movieDetails!= null) {
+            if (movieDetails != null) {
                 loadMovieDetails(movieDetails);
             } else {
 
             }
         }
 
-        private void loadMovieDetails(HashMap movieDetails){
+        private void loadMovieDetails(HashMap movieDetails) {
 
         }
     }

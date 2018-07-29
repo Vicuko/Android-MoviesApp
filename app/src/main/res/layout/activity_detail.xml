@@ -21,14 +21,16 @@
 
         <ProgressBar
             android:id="@+id/details_loader"
-            android:layout_height="@dimen/progress_bar_height"
             android:layout_width="@dimen/progress_bar_width"
+            android:layout_height="@dimen/progress_bar_height"
             android:layout_gravity="center"
             android:visibility="invisible" />
     </LinearLayout>
-    <com.google.android.youtube.player.YouTubePlayerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-    </com.google.android.youtube.player.YouTubePlayerView>
+    <fragment
+        android:name="com.google.android.youtube.player.YouTubePlayerFragment"
+        android:id="@+id/trailer_youtube_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 </FrameLayout>
