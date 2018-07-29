@@ -26,6 +26,7 @@ public class MoviesJsonUtils {
         final String RESPONSE_RESULTS = "results";
 
         final String MOVIE_ID = "id";
+        final String MOVIE_TITLE = "title";
         final String MOVIE_VOTE = "vote_average";
         final String MOVIE_POSTER_PATH = "poster_path";
         final String MOVIE_POSTER_URL = "poster_url";
@@ -50,6 +51,7 @@ public class MoviesJsonUtils {
 
         for (int i = 0; i < moviesArray.length(); i++) {
             String id;
+            String title;
             String voteAverage;
             String posterPath;
             HashMap movieHash = new HashMap();
@@ -57,6 +59,7 @@ public class MoviesJsonUtils {
             JSONObject movieObject = moviesArray.getJSONObject(i);
 
             id = movieObject.getString(MOVIE_ID);
+            title = movieObject.getString(MOVIE_TITLE);
             voteAverage = movieObject.getString(MOVIE_VOTE);
             posterPath = movieObject.getString(MOVIE_POSTER_PATH);
 
@@ -75,6 +78,7 @@ public class MoviesJsonUtils {
             String posterUrl = url.toString();
 
             movieHash.put(MOVIE_ID, id);
+            movieHash.put(MOVIE_TITLE, title);
             movieHash.put(MOVIE_VOTE, voteAverage);
             movieHash.put(MOVIE_POSTER_URL, posterUrl);
 

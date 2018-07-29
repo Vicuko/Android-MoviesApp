@@ -1,5 +1,6 @@
 package com.example.android.moviesapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -13,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.moviesapp.utilities.MoviesJsonUtils;
 import com.example.android.moviesapp.utilities.NetworkUtils;
@@ -52,7 +52,20 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         String moviesFilter = sharedPrefs.getString(
                 getString(R.string.criteria_key),
                 getString(R.string.criteria_default));
+        String activityTitle = getSelectionTitle(moviesFilter);
+        setTitle(activityTitle);
         loadMovies(moviesFilter);
+    }
+
+    private String getSelectionTitle(String preferenceValue){
+        String[] entries = getResources().getStringArray(R.array.criteria_entries);
+        String[] values = getResources().getStringArray(R.array.criteria_values);
+        for (int i = 0; i<values.length; i++){
+            if (values[i].equals(preferenceValue)){
+                return entries[i];
+            }
+        }
+        return (String) this.getApplicationInfo().loadLabel(this.getPackageManager());
     }
 
     private void loadMovies(String filter_criteria){
@@ -90,14 +103,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     @Override
     public void onClick(HashMap dataForDetail, int adapterPosition) {
-        //Code for carrying out an intent to the detail activity passing on the information
-//        Context context = this;
-//        Class destinationClass = DetailActivity.class;
-//        Intent intentToStartDetailActivity = new Intent(context, destinationClass);
-//        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, weatherForDay);
-//        startActivity(intentToStartDetailActivity);
-        String toastText = getResources().getString(R.string.toast_message, adapterPosition);
-        Toast.makeText(this,toastText,Toast.LENGTH_LONG).show();
+        Context context = this;
+        Class destinationClass = DetailActivity.class;
+        Intent intentToStartDetailActivity = new Intent(context, destinationClass);
+        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, dataForDetail);
+        startActivity(intentToStartDetailActivity);
     }
 
     public class FetchMoviesTask extends AsyncTask<String, Void, HashMap[]>{

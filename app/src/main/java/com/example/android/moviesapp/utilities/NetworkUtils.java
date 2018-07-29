@@ -1,6 +1,5 @@
 package com.example.android.moviesapp.utilities;
 
-import android.app.Application;
 import android.net.Uri;
 import android.util.Log;
 
@@ -15,7 +14,7 @@ import java.util.Scanner;
  * Created by Vicuko on 25/7/18.
  * It will be used to retrieve movies information from the Movies API
  */
-public class NetworkUtils extends Application {
+public class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
     private static final String TMDB_URL = "https://api.themoviedb.org/3";

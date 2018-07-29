@@ -24,6 +24,5 @@
 
     <!--Strings for activity_main layout-->
     <string name="non_loading_message">There has been an error, please refresh to update content</string>
-    <string name="toast_message">You clicked on item %1$d</string>
 
 </resources>
