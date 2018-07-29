@@ -1,8 +1,10 @@
 package com.example.android.moviesapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,7 +48,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mMoviesAdapter = new MoviesAdapter(this);
         mRecyclerView.setAdapter(mMoviesAdapter);
 
-        loadMovies("upcoming");
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String moviesFilter = sharedPrefs.getString(
+                getString(R.string.criteria_key),
+                getString(R.string.criteria_default));
+        loadMovies(moviesFilter);
     }
 
     private void loadMovies(String filter_criteria){
