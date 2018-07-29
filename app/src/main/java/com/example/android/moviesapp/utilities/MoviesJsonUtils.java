@@ -1,7 +1,10 @@
 package com.example.android.moviesapp.utilities;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -92,5 +95,68 @@ public class MoviesJsonUtils {
         return parsedMoviesData;
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static HashMap getMovieDetailsFromJson(Context context, String movieDetailsJsonStr)
+            throws JSONException {
+
+        final String TAG = MoviesJsonUtils.class.getSimpleName();
+        final String RESPONSE_CODE = "status_code";
+        final String RESPONSE_MESSAGE = "status_message";
+
+        final String MOVIE_BUDGET = "budget";
+        final String MOVIE_GENRES = "genres";
+        final String MOVIE_GENRES_NAME = "name";
+        final String MOVIE_HOMEPAGE = "homepage";
+        final String MOVIE_PRODUCTION_COMPANIES = "production_companies";
+        final String MOVIE_PRODUCTION_COMPANIES_NAME = "name";
+        final String MOVIE_PRODUCTION_COMPANIES_LOGO = "logo_path";
+        final String MOVIE_TAGLINE = "tagline";
+
+        JSONObject movieDetailsJson = new JSONObject(movieDetailsJsonStr);
+
+        if (movieDetailsJson.has(RESPONSE_CODE)) {
+            int errorCode = movieDetailsJson.getInt(RESPONSE_CODE);
+            String errorMessage = movieDetailsJson.getString(RESPONSE_MESSAGE);
+            Log.e(TAG, RESPONSE_CODE + ":" + errorCode + ", " + RESPONSE_MESSAGE + ":" + errorMessage);
+            return null;
+        }
+
+        HashMap parsedMovieDetailsHash = new HashMap();
+
+        String budget = movieDetailsJson.getString(MOVIE_BUDGET);
+        String homepage = movieDetailsJson.getString(MOVIE_HOMEPAGE);
+        String tagline = movieDetailsJson.getString(MOVIE_TAGLINE);
+
+        JSONArray genresArray = movieDetailsJson.getJSONArray(MOVIE_GENRES);
+        String[] genres = new String[genresArray.length()];
+
+        for (int i=0; i<genresArray.length();i++){
+            JSONObject genreObject = genresArray.getJSONObject(i);
+            genres[i] = genreObject.getString(MOVIE_GENRES_NAME);
+        }
+        String genresResult = String.join(", ", genres);
+
+        JSONArray productionArray = movieDetailsJson.getJSONArray(MOVIE_PRODUCTION_COMPANIES);
+        String[] productionCompanies = new String[productionArray.length()];
+        String[] productionCompaniesLogos = new String[productionArray.length()];
+
+        for (int i=0; i<productionArray.length();i++){
+            JSONObject productionObject = productionArray.getJSONObject(i);
+            productionCompanies[i] = productionObject.getString(MOVIE_PRODUCTION_COMPANIES_NAME);
+            productionCompaniesLogos[i] = productionObject.getString(MOVIE_PRODUCTION_COMPANIES_LOGO);
+        }
+        String companiesResult = String.join(", ", productionCompanies);
+
+        parsedMovieDetailsHash.put(MOVIE_BUDGET, budget);
+        parsedMovieDetailsHash.put(MOVIE_HOMEPAGE, homepage);
+        parsedMovieDetailsHash.put(MOVIE_TAGLINE, tagline);
+
+        parsedMovieDetailsHash.put(MOVIE_GENRES, genresResult);
+        parsedMovieDetailsHash.put(MOVIE_PRODUCTION_COMPANIES_NAME, companiesResult);
+        parsedMovieDetailsHash.put(MOVIE_PRODUCTION_COMPANIES_LOGO, productionCompaniesLogos);
+
+        return parsedMovieDetailsHash;
+}
 
 }
