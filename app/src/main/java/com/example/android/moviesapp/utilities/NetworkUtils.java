@@ -29,8 +29,6 @@ public class NetworkUtils extends Application {
     private static final int page = 1;
 
     public static URL buildUrl(String api_key, String filter_criteria) {
-//        String defaultCriteria = Resources.getSystem().getString(R.string.criteria_default);
-        //Pendiente de coger dato de las preferencias para esta parte.
         String defaultCriteria = "now_playing";
 
         filter_criteria = !filter_criteria.isEmpty() ? filter_criteria : defaultCriteria;
