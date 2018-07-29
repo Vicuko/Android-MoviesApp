@@ -27,10 +27,23 @@
             android:visibility="invisible" />
     </LinearLayout>
 
-    <fragment
-        android:name="com.google.android.youtube.player.YouTubePlayerFragment"
-        android:id="@+id/trailer_youtube_view"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
 
+        <fragment
+            android:id="@+id/trailer_youtube_view"
+            android:name="com.google.android.youtube.player.YouTubePlayerFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/video_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/trailer_youtube_view"
+            android:text="Click"
+            android:gravity="center"
+            />
+    </RelativeLayout>
 </FrameLayout>

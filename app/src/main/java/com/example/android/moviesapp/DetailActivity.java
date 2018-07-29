@@ -8,6 +8,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.example.android.moviesapp.utilities.MoviesJsonUtils;
@@ -27,6 +28,7 @@ public class DetailActivity extends AppCompatActivity {
     private ProgressBar mLoadingIndicator;
     private YouTubePlayerFragment mYouTubePlayerFragment;
     private YouTubePlayer mYouTubePlayer;
+    private Button mVideoButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.details_loader);
+        mVideoButton = (Button) findViewById(R.id.video_button);
 
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -44,9 +47,17 @@ public class DetailActivity extends AppCompatActivity {
                 new FetchDetailsTask().execute((String) mMovieDetail.get("id"));
             } else {
 //                showError();
+                Log.e(TAG, "Missing information in intent. Can't load content");
             }
         }
         initializeYouTubePlayer("wb49-oV0F78");
+
+        mVideoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mYouTubePlayer.cueVideo("vn9mMeWcgoM");
+            }
+        });
     }
 
     private void initializeYouTubePlayer(final String video_key) {
