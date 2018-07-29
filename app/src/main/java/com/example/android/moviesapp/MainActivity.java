@@ -114,7 +114,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 return null;
             }
             String filter_criteria = params[0];
-            URL moviesRequestUrl = NetworkUtils.buildUrl(filter_criteria);
+            String api_key = getApplicationContext().getResources().getString(R.string.api_key);
+            URL moviesRequestUrl = NetworkUtils.buildUrl(api_key, filter_criteria);
 
             try {
                 String jsonMoviesResponse = NetworkUtils

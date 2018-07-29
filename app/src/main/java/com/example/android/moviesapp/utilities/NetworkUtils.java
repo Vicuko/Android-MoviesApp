@@ -1,5 +1,6 @@
 package com.example.android.moviesapp.utilities;
 
+import android.app.Application;
 import android.net.Uri;
 import android.util.Log;
 
@@ -14,8 +15,7 @@ import java.util.Scanner;
  * Created by Vicuko on 25/7/18.
  * It will be used to retrieve movies information from the Movies API
  */
-public class NetworkUtils {
-
+public class NetworkUtils extends Application {
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
     private static final String TMDB_URL = "https://api.themoviedb.org/3";
@@ -25,16 +25,15 @@ public class NetworkUtils {
     final static String LANGUAGE_PARAM = "language";
     final static String PAGE_PARAM = "page";
 
-    private static final String api_key = "1234567890";
     private static final String language = "en-US";
     private static final int page = 1;
 
-    public static URL buildUrl(String filter_criteria) {
+    public static URL buildUrl(String api_key, String filter_criteria) {
 //        String defaultCriteria = Resources.getSystem().getString(R.string.criteria_default);
         //Pendiente de coger dato de las preferencias para esta parte.
         String defaultCriteria = "now_playing";
-        filter_criteria = !filter_criteria.isEmpty() ? filter_criteria : defaultCriteria;
 
+        filter_criteria = !filter_criteria.isEmpty() ? filter_criteria : defaultCriteria;
         Uri builtUri = Uri.parse(TMDB_URL).buildUpon()
                 .appendPath(MOVIE_SEARCH)
                 .appendPath(filter_criteria)
