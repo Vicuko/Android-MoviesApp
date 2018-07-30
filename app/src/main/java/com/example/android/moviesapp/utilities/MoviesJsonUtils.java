@@ -1,7 +1,6 @@
 package com.example.android.moviesapp.utilities;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -20,7 +19,7 @@ import java.util.HashMap;
  */
 public class MoviesJsonUtils {
 
-    public static HashMap[] getMoviesInfoFromJson(Context context, String moviesJsonStr)
+    public static HashMap[] getMoviesInfoFromJson(String moviesJsonStr)
             throws JSONException {
 
         final String TAG = MoviesJsonUtils.class.getSimpleName();
@@ -97,7 +96,7 @@ public class MoviesJsonUtils {
 
     @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static HashMap getMovieDetailsFromJson(Context context, String movieDetailsJsonStr)
+    public static HashMap getMovieDetailsFromJson(String movieDetailsJsonStr)
             throws JSONException {
 
         final String TAG = MoviesJsonUtils.class.getSimpleName();
@@ -131,7 +130,7 @@ public class MoviesJsonUtils {
         JSONArray genresArray = movieDetailsJson.getJSONArray(MOVIE_GENRES);
         String[] genres = new String[genresArray.length()];
 
-        for (int i=0; i<genresArray.length();i++){
+        for (int i = 0; i < genresArray.length(); i++) {
             JSONObject genreObject = genresArray.getJSONObject(i);
             genres[i] = genreObject.getString(MOVIE_GENRES_NAME);
         }
@@ -141,7 +140,7 @@ public class MoviesJsonUtils {
         String[] productionCompanies = new String[productionArray.length()];
         String[] productionCompaniesLogos = new String[productionArray.length()];
 
-        for (int i=0; i<productionArray.length();i++){
+        for (int i = 0; i < productionArray.length(); i++) {
             JSONObject productionObject = productionArray.getJSONObject(i);
             productionCompanies[i] = productionObject.getString(MOVIE_PRODUCTION_COMPANIES_NAME);
             productionCompaniesLogos[i] = productionObject.getString(MOVIE_PRODUCTION_COMPANIES_LOGO);
@@ -157,6 +156,51 @@ public class MoviesJsonUtils {
         parsedMovieDetailsHash.put(MOVIE_PRODUCTION_COMPANIES_LOGO, productionCompaniesLogos);
 
         return parsedMovieDetailsHash;
-}
+    }
+
+    public static HashMap getMovieVideosFromJson(String movieVideosJsonStr)
+            throws JSONException {
+
+        final String TAG = MoviesJsonUtils.class.getSimpleName();
+        final String RESPONSE_CODE = "status_code";
+        final String RESPONSE_MESSAGE = "status_message";
+
+        final String MOVIE_VIDEOS_KEY = "videos";
+
+        final String MOVIE_VIDEO_RESULTS = "results";
+        final String MOVIE_VIDEO_SITE = "site";
+        final String MOVIE_VIDEO_TYPE = "type";
+        final String MOVIE_VIDEO_KEY = "key";
+
+        final String MOVIE_VIDEO_YOUTUBE_VALIDATION = "YouTube";
+        final String MOVIE_VIDEO_TRAILER_VALIDATION = "Trailer";
+
+        JSONObject movieVideosJson = new JSONObject(movieVideosJsonStr);
+
+        if (movieVideosJson.has(RESPONSE_CODE)) {
+            int errorCode = movieVideosJson.getInt(RESPONSE_CODE);
+            String errorMessage = movieVideosJson.getString(RESPONSE_MESSAGE);
+            Log.e(TAG, RESPONSE_CODE + ":" + errorCode + ", " + RESPONSE_MESSAGE + ":" + errorMessage);
+            return null;
+        }
+
+        JSONArray movieList = movieVideosJson.getJSONArray(MOVIE_VIDEO_RESULTS);
+        String[] parsedMovieVideos = new String[movieList.length()];
+        HashMap parsedMovieVideosHash = new HashMap();
+
+        for (int i = 0; i < movieList.length(); i++) {
+            JSONObject currentMovieInList = movieList.getJSONObject(i);
+            String site = currentMovieInList.getString(MOVIE_VIDEO_SITE);
+            String type = currentMovieInList.getString(MOVIE_VIDEO_TYPE);
+            if (site.equals(MOVIE_VIDEO_YOUTUBE_VALIDATION) && type.equals(MOVIE_VIDEO_TRAILER_VALIDATION)) {
+                String key = currentMovieInList.getString(MOVIE_VIDEO_KEY);
+                parsedMovieVideos[i] = key;
+            }
+        }
+
+        parsedMovieVideosHash.put(MOVIE_VIDEOS_KEY, parsedMovieVideos);
+
+        return parsedMovieVideosHash;
+    }
 
 }

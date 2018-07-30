@@ -20,15 +20,19 @@ import com.google.android.youtube.player.YouTubePlayerFragment;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
-    private HashMap mMovieDetail;
+    private HashMap mMovieInfo;
     private ProgressBar mLoadingIndicator;
     private YouTubePlayerFragment mYouTubePlayerFragment;
     private YouTubePlayer mYouTubePlayer;
-    private Button mVideoButton;
+    private Button mTrailerButton1;
+    private Button mTrailerButton2;
+    private Button mTrailerButton3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,28 +40,22 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.details_loader);
-        mVideoButton = (Button) findViewById(R.id.video_button);
+        mTrailerButton1 = (Button) findViewById(R.id.trailer_button1);
+        mTrailerButton2 = (Button) findViewById(R.id.trailer_button1);
+        mTrailerButton3 = (Button) findViewById(R.id.trailer_button1);
 
         Intent intentThatStartedThisActivity = getIntent();
 
         if (intentThatStartedThisActivity != null) {
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
-                mMovieDetail = (HashMap) intentThatStartedThisActivity.getSerializableExtra(Intent.EXTRA_TEXT);
-                setTitle((String) mMovieDetail.get("title"));
-                new FetchDetailsTask().execute((String) mMovieDetail.get("id"));
+                mMovieInfo = (HashMap) intentThatStartedThisActivity.getSerializableExtra(Intent.EXTRA_TEXT);
+                setTitle((String) mMovieInfo.get("title"));
+                new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
             } else {
 //                showError();
                 Log.e(TAG, "Missing information in intent. Can't load content");
             }
         }
-        initializeYouTubePlayer("wb49-oV0F78");
-
-        mVideoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mYouTubePlayer.cueVideo("vn9mMeWcgoM");
-            }
-        });
     }
 
     private void initializeYouTubePlayer(final String video_key) {
@@ -98,15 +96,24 @@ public class DetailActivity extends AppCompatActivity {
             if (params.length == 0) {
                 return null;
             }
-            String filter_criteria = params[0];
-            URL movieDetailsUrl = NetworkUtils.buildDetailsUrl(DetailActivity.this, filter_criteria);
+            String movieId = params[0];
+            URL movieDetailsUrl = NetworkUtils.buildDetailsUrl(DetailActivity.this, movieId);
+            URL movieVideosUrl = NetworkUtils.buildVideosUrl(DetailActivity.this, movieId);
 
             try {
                 String jsonMovieDetailsResponse = NetworkUtils
                         .getResponseFromHttpUrl(movieDetailsUrl);
 
+                String jsonMovieVideosResponse = NetworkUtils
+                        .getResponseFromHttpUrl(movieVideosUrl);
+
                 HashMap detailsJsonMovieData = MoviesJsonUtils
-                        .getMovieDetailsFromJson(DetailActivity.this, jsonMovieDetailsResponse);
+                        .getMovieDetailsFromJson(jsonMovieDetailsResponse);
+
+                HashMap videosJsonMovieData = MoviesJsonUtils
+                        .getMovieVideosFromJson(jsonMovieVideosResponse);
+
+                detailsJsonMovieData.putAll(videosJsonMovieData);
 
                 return detailsJsonMovieData;
 
@@ -127,7 +134,45 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         private void loadMovieDetails(HashMap movieDetails) {
+            String budget = (String) movieDetails.get("budget");
+            String genres = (String) movieDetails.get("genres");
 
+            String[] videos = (String[]) movieDetails.get("videos");
+
+            loadTrailers(videos);
+        }
+
+        private void loadTrailers(String[] videos){
+            initializeYouTubePlayer("wb49-oV0F78");
+
+            HashMap videosHashMap = new HashMap();
+            videosHashMap.put(mTrailerButton1, videos[0]);
+            videosHashMap.put(mTrailerButton2, videos[1]);
+            videosHashMap.put(mTrailerButton3, videos[2]);
+
+            Iterator it = videosHashMap.entrySet().iterator();
+            while (it.hasNext()) {
+                HashMap.Entry element = (HashMap.Entry) it.next();
+                setClickActionOnButtons((Button) element.getKey(), (String) element.getValue());
+                showButton((Button) element.getKey());
+            }
+        }
+
+        private void setClickActionOnButtons (Button button, final String key) {
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mYouTubePlayer.cueVideo(key);
+                }
+            });
+        }
+
+        private void showButton(Button button){
+            button.setVisibility(View.VISIBLE);
+        }
+
+        private void hideButton(Button button){
+            button.setVisibility(View.INVISIBLE);
         }
     }
 }

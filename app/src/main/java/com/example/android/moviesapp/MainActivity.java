@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                         .getResponseFromHttpUrl(moviesRequestUrl);
 
                 HashMap[] simpleJsonMoviesData = MoviesJsonUtils
-                        .getMoviesInfoFromJson(MainActivity.this, jsonMoviesResponse);
+                        .getMoviesInfoFromJson(jsonMoviesResponse);
 
                 return simpleJsonMoviesData;
 

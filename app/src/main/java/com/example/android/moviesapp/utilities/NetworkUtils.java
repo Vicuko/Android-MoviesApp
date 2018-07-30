@@ -22,7 +22,7 @@ public class NetworkUtils {
 
     private static final String TMDB_URL = "https://api.themoviedb.org/3";
     private static final String MOVIE_SEARCH = "movie";
-    private static final String LIST_SEARCH = "list";
+    private static final String VIDEOS_SEARCH = "videos";
 
     final static String API_KEY_PARAM = "api_key";
     final static String LANGUAGE_PARAM = "language";
@@ -52,6 +52,19 @@ public class NetworkUtils {
         Uri builtUri = Uri.parse(TMDB_URL).buildUpon()
                 .appendPath(MOVIE_SEARCH)
                 .appendPath(id)
+                .appendQueryParameter(API_KEY_PARAM, api_key)
+                .appendQueryParameter(LANGUAGE_PARAM, language)
+                .build();
+
+        return getUrlFromUri(builtUri);
+    }
+
+    public static URL buildVideosUrl(Context context, String id) {
+        String api_key = getApiKey(context);
+        Uri builtUri = Uri.parse(TMDB_URL).buildUpon()
+                .appendPath(MOVIE_SEARCH)
+                .appendPath(id)
+                .appendPath(VIDEOS_SEARCH)
                 .appendQueryParameter(API_KEY_PARAM, api_key)
                 .appendQueryParameter(LANGUAGE_PARAM, language)
                 .build();
