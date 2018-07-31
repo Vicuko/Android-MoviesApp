@@ -41,9 +41,10 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
                     int adapterPosition = getAdapterPosition();
                     if (!(mTrailerBeingPlayed == adapterPosition)) {
                         mYouTubePlayer.cueVideo(mVideoList.get(adapterPosition));
+                        mTrailerBeingPlayed = adapterPosition;
                     }
                     else{
-                        Toast.makeText(mContext,mContext.getResources().getString(R.string.active_video), Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext,mContext.getResources().getString(R.string.active_video,adapterPosition+1), Toast.LENGTH_LONG).show();
                     }
                 }
             });
