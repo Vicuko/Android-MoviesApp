@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -185,7 +186,7 @@ public class MoviesJsonUtils {
         }
 
         JSONArray movieList = movieVideosJson.getJSONArray(MOVIE_VIDEO_RESULTS);
-        String[] parsedMovieVideos = new String[movieList.length()];
+        ArrayList<String> parsedMovieVideos = new ArrayList<String>();
         HashMap parsedMovieVideosHash = new HashMap();
 
         for (int i = 0; i < movieList.length(); i++) {
@@ -194,7 +195,7 @@ public class MoviesJsonUtils {
             String type = currentMovieInList.getString(MOVIE_VIDEO_TYPE);
             if (site.equals(MOVIE_VIDEO_YOUTUBE_VALIDATION) && type.equals(MOVIE_VIDEO_TRAILER_VALIDATION)) {
                 String key = currentMovieInList.getString(MOVIE_VIDEO_KEY);
-                parsedMovieVideos[i] = key;
+                parsedMovieVideos.add(key);
             }
         }
 
