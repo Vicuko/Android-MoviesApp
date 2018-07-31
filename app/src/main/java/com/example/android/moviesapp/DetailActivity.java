@@ -21,6 +21,7 @@ import com.google.android.youtube.player.YouTubePlayer.OnInitializedListener;
 import com.google.android.youtube.player.YouTubePlayerFragment;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DetailActivity extends AppCompatActivity {
@@ -48,7 +49,7 @@ public class DetailActivity extends AppCompatActivity {
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
                 mMovieInfo = (HashMap) intentThatStartedThisActivity.getSerializableExtra(Intent.EXTRA_TEXT);
                 setTitle((String) mMovieInfo.get("title"));
-                setUpRecyclerView();
+                initializeYouTubePlayer();
                 new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
             } else {
 //                showError();
@@ -64,12 +65,12 @@ public class DetailActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mTrailersAdapter = new TrailersAdapter(this);
+        mTrailersAdapter = new TrailersAdapter(this, mYouTubePlayer);
         mRecyclerView.setAdapter(mTrailersAdapter);
 
     }
 
-    private void initializeYouTubePlayer(final String video_key) {
+    private void initializeYouTubePlayer() {
         String api_key = getApplicationContext().getResources().getString(R.string.youtube_api_key);
         mYouTubePlayerFragment = (YouTubePlayerFragment) getFragmentManager().findFragmentById(R.id.trailer_youtube_view);
 
@@ -82,7 +83,7 @@ public class DetailActivity extends AppCompatActivity {
                 if (!wasRestored) {
                     mYouTubePlayer = player;
                     mYouTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-                    mYouTubePlayer.cueVideo(video_key);
+                    setUpRecyclerView();
                 }
             }
 
@@ -151,17 +152,17 @@ public class DetailActivity extends AppCompatActivity {
             String tagline = (String) mMovieDetails.get("tagline");
             String genres = (String) mMovieDetails.get("genres");
             String production_companies = (String) mMovieDetails.get("production_companies");
-            String[] videos = (String[]) mMovieDetails.get("videos");
+            ArrayList<String> videos = (ArrayList<String>) mMovieDetails.get("videos");
 
-            loadTrailers(videos);
+//            loadTrailers(videos);
+            mYouTubePlayer.cueVideo(videos.get(0));
             mTrailersAdapter.setMoviesData(videos);
 
         }
 
-        private void loadTrailers(String[] videos) {
-            initializeYouTubePlayer("wb49-oV0F78");
-
-        }
+//        private void loadTrailers(ArrayList<String> videos) {
+//            initializeYouTubePlayer(videos.get(0));
+//        }
     }
 
 }

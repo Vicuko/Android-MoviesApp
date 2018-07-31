@@ -10,31 +10,34 @@ import android.widget.Button;
 
 import com.google.android.youtube.player.YouTubePlayer;
 
+import java.util.ArrayList;
+
 /**
  * Created by Vicuko on 30/7/18.
  */
 public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.TrailersAdapterViewHolder> {
 
-    private String[] mVideoList;
+    private ArrayList<String> mVideoList;
     private Context mContext;
+    private YouTubePlayer mYouTubePlayer;
 
-    public TrailersAdapter(Context context) {
+
+    public TrailersAdapter(Context context, YouTubePlayer youTubePlayer) {
         mContext = context;
+        mYouTubePlayer = youTubePlayer;
     }
 
     public class TrailersAdapterViewHolder extends RecyclerView.ViewHolder {
         public Button mTrailerButton;
-        public YouTubePlayer mYouTubePlayer;
 
-        public TrailersAdapterViewHolder(View itemView) {
+        public TrailersAdapterViewHolder(final View itemView) {
             super(itemView);
-            final int adapterPosition = getAdapterPosition();
-            mYouTubePlayer = (YouTubePlayer) itemView.findViewById(R.id.trailer_youtube_view);
             mTrailerButton = (Button) itemView.findViewById(R.id.trailer_button);
             mTrailerButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mYouTubePlayer.cueVideo(mVideoList[adapterPosition]);
+                    int adapterPosition = getAdapterPosition();
+                    mYouTubePlayer.cueVideo(mVideoList.get(adapterPosition));
                 }
             });
         }
@@ -61,10 +64,10 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
     @Override
     public int getItemCount() {
         if (null == mVideoList) return 0;
-        return mVideoList.length;
+        return mVideoList.size();
     }
 
-    public void setMoviesData(String[] videoList) {
+    public void setMoviesData(ArrayList<String> videoList) {
         mVideoList = videoList;
         notifyDataSetChanged();
     }
