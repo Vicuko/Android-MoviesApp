@@ -1,50 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_detail_layou"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".DetailActivity">
+    android:layout_height="match_parent">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/error_detail_message_display"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="@dimen/padding"
-            android:text="@string/non_loading_message"
-            android:textAlignment="center"
-            android:textSize="@dimen/standard_text_size"
-            android:visibility="invisible" />
-
-        <ProgressBar
-            android:id="@+id/details_loader"
-            android:layout_width="@dimen/progress_bar_width"
-            android:layout_height="@dimen/progress_bar_height"
-            android:layout_gravity="center"
-            android:visibility="invisible" />
-
-        <RelativeLayout
-            android:id="@+id/trailer_block"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible">
+            android:layout_height="match_parent">
 
-            <fragment
-                android:id="@+id/trailer_youtube_view"
-                android:name="com.google.android.youtube.player.YouTubePlayerFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/trailers_recycler_view"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/error_detail_message_display"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/trailer_youtube_view" />
+                android:layout_gravity="center"
+                android:padding="@dimen/padding"
+                android:text="@string/non_loading_message"
+                android:textAlignment="center"
+                android:textSize="@dimen/standard_text_size"
+                android:visibility="invisible" />
 
-        </RelativeLayout>
-    </FrameLayout>
-</FrameLayout>
+            <ProgressBar
+                android:id="@+id/details_loader"
+                android:layout_width="@dimen/progress_bar_width"
+                android:layout_height="@dimen/progress_bar_height"
+                android:layout_gravity="center"
+                android:visibility="invisible" />
+
+            <RelativeLayout
+                android:id="@+id/trailer_block"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible">
+
+                <fragment
+                    android:id="@+id/trailer_youtube_view"
+                    android:name="com.google.android.youtube.player.YouTubePlayerFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/trailers_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/trailer_youtube_view" />
+
+            </RelativeLayout>
+        </FrameLayout>
+
+</ScrollView>

@@ -25,7 +25,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".DetailActivity"></activity>
+        <activity
+            android:name=".DetailActivity"
+            android:configChanges="screenSize|orientation|screenLayout|navigation"/>
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.example.android.moviesapp;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,6 +42,8 @@ public class DetailActivity extends AppCompatActivity {
     private TrailersAdapter mTrailersAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private boolean mConfigurationHasChanged;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,8 @@ public class DetailActivity extends AppCompatActivity {
         mErrorMessageDisplay = (TextView) findViewById(R.id.error_detail_message_display);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.details_loader);
         mTrailerBlock = (RelativeLayout) findViewById(R.id.trailer_block);
+
+        mConfigurationHasChanged = false;
 
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity != null) {
@@ -62,6 +67,12 @@ public class DetailActivity extends AppCompatActivity {
                 Log.e(TAG, "Missing information in intent. Can't load content");
             }
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mConfigurationHasChanged = true;
     }
 
     private void initializeYouTubePlayer() {
@@ -170,11 +181,15 @@ public class DetailActivity extends AppCompatActivity {
             String tagline = (String) mMovieDetails.get("tagline");
             String genres = (String) mMovieDetails.get("genres");
             String production_companies = (String) mMovieDetails.get("production_companies");
-            ArrayList<String> videos = (ArrayList<String>) mMovieDetails.get("videos");
+            ArrayList<String> videoArray = (ArrayList<String>) mMovieDetails.get("videos");
 
-            if (!videos.isEmpty()) {
-                mYouTubePlayer.cueVideo(videos.get(0));
-                mTrailersAdapter.setMoviesData(videos);
+            if (!videoArray.isEmpty() && mYouTubePlayer!=null) {
+                mYouTubePlayer.cueVideo(videoArray.get(0));
+                mTrailersAdapter.setMoviesData(videoArray);
+                showTrailerBlock();
+            }
+            else if (mConfigurationHasChanged){
+                mTrailersAdapter.setMoviesData(videoArray);
                 showTrailerBlock();
             }
 
