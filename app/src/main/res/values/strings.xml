@@ -27,5 +27,6 @@
 
     <!--Strings for activity_detail layout-->
     <string name="trailer_button">Trailer #</string>
+    <string name="active_video">It seems trailer #%1$d is already being played</string>
 
 </resources>

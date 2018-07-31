@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubePlayer;
 
@@ -20,6 +21,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
     private ArrayList<String> mVideoList;
     private Context mContext;
     private YouTubePlayer mYouTubePlayer;
+    private int mTrailerBeingPlayed;
 
 
     public TrailersAdapter(Context context, YouTubePlayer youTubePlayer) {
@@ -37,7 +39,12 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
                 @Override
                 public void onClick(View view) {
                     int adapterPosition = getAdapterPosition();
-                    mYouTubePlayer.cueVideo(mVideoList.get(adapterPosition));
+                    if (!(mTrailerBeingPlayed == adapterPosition)) {
+                        mYouTubePlayer.cueVideo(mVideoList.get(adapterPosition));
+                    }
+                    else{
+                        Toast.makeText(mContext,mContext.getResources().getString(R.string.active_video), Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }
@@ -69,6 +76,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
 
     public void setMoviesData(ArrayList<String> videoList) {
         mVideoList = videoList;
+        mTrailerBeingPlayed = 0;
         notifyDataSetChanged();
     }
 

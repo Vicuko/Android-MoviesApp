@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.android.moviesapp.utilities.MoviesJsonUtils;
@@ -29,13 +30,17 @@ public class DetailActivity extends AppCompatActivity {
     private static final String TAG = DetailActivity.class.getSimpleName();
     private HashMap mMovieInfo;
     private HashMap mMovieDetails;
+
     private ProgressBar mLoadingIndicator;
+    private TextView mErrorMessageDisplay;
+
+    private RelativeLayout mTrailerBlock;
     private YouTubePlayerFragment mYouTubePlayerFragment;
     private YouTubePlayer mYouTubePlayer;
     private RecyclerView mRecyclerView;
     private TrailersAdapter mTrailersAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private TextView mErrorMessageDisplay;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         mErrorMessageDisplay = (TextView) findViewById(R.id.error_detail_message_display);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.details_loader);
+        mTrailerBlock = (RelativeLayout) findViewById(R.id.trailer_block);
 
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity != null) {
@@ -52,22 +58,10 @@ public class DetailActivity extends AppCompatActivity {
                 initializeYouTubePlayer();
                 new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
             } else {
-//                showError();
+                showErrorMessage();
                 Log.e(TAG, "Missing information in intent. Can't load content");
             }
         }
-    }
-
-    private void setUpRecyclerView() {
-        mRecyclerView = findViewById(R.id.trailers_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-
-        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mTrailersAdapter = new TrailersAdapter(this, mYouTubePlayer);
-        mRecyclerView.setAdapter(mTrailersAdapter);
-
     }
 
     private void initializeYouTubePlayer() {
@@ -83,6 +77,7 @@ public class DetailActivity extends AppCompatActivity {
                 if (!wasRestored) {
                     mYouTubePlayer = player;
                     mYouTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+                    hideTrailerBlock();
                     setUpRecyclerView();
                 }
             }
@@ -92,6 +87,29 @@ public class DetailActivity extends AppCompatActivity {
                 Log.e(TAG, "YouTube Player View initialization failed");
             }
         });
+    }
+
+    private void setUpRecyclerView() {
+        mRecyclerView = findViewById(R.id.trailers_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mTrailersAdapter = new TrailersAdapter(this, mYouTubePlayer);
+        mRecyclerView.setAdapter(mTrailersAdapter);
+    }
+
+    private void showTrailerBlock() {
+        mTrailerBlock.setVisibility(View.VISIBLE);
+    }
+
+    private void hideTrailerBlock() {
+        mTrailerBlock.setVisibility(View.INVISIBLE);
+    }
+
+    private void showErrorMessage() {
+        mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
     public class FetchDetailsTask extends AsyncTask<String, Void, HashMap> {
@@ -142,7 +160,7 @@ public class DetailActivity extends AppCompatActivity {
                 mMovieDetails = movieDetails;
                 loadMovieDetails();
             } else {
-
+                showErrorMessage();
             }
         }
 
@@ -154,15 +172,14 @@ public class DetailActivity extends AppCompatActivity {
             String production_companies = (String) mMovieDetails.get("production_companies");
             ArrayList<String> videos = (ArrayList<String>) mMovieDetails.get("videos");
 
-//            loadTrailers(videos);
-            mYouTubePlayer.cueVideo(videos.get(0));
-            mTrailersAdapter.setMoviesData(videos);
+            if (!videos.isEmpty()) {
+                mYouTubePlayer.cueVideo(videos.get(0));
+                mTrailersAdapter.setMoviesData(videos);
+                showTrailerBlock();
+            }
 
         }
 
-//        private void loadTrailers(ArrayList<String> videos) {
-//            initializeYouTubePlayer(videos.get(0));
-//        }
     }
 
 }

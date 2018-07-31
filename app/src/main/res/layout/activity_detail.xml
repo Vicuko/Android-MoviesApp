@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,43 +9,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/error_detail_message_display"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:layout_gravity="center"
+            android:padding="@dimen/padding"
+            android:text="@string/non_loading_message"
+            android:textAlignment="center"
+            android:textSize="@dimen/standard_text_size"
+            android:visibility="invisible" />
 
-            <TextView
-                android:id="@+id/error_detail_message_display"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:padding="@dimen/padding"
-                android:text="@string/non_loading_message"
-                android:textAlignment="center"
-                android:textSize="@dimen/standard_text_size"
-                android:visibility="invisible" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <ProgressBar
-                android:id="@+id/details_loader"
-                android:layout_width="@dimen/progress_bar_width"
-                android:layout_height="@dimen/progress_bar_height"
-                android:layout_gravity="center"
-                android:visibility="invisible" />
-        </LinearLayout>
+        <ProgressBar
+            android:id="@+id/details_loader"
+            android:layout_width="@dimen/progress_bar_width"
+            android:layout_height="@dimen/progress_bar_height"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
 
         <RelativeLayout
             android:id="@+id/trailer_block"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="invisible">
 
             <fragment
                 android:id="@+id/trailer_youtube_view"
@@ -55,10 +41,10 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/trailers_recycler_view"
-                android:layout_below="@+id/trailer_youtube_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/trailer_youtube_view" />
 
         </RelativeLayout>
     </FrameLayout>
-</ScrollView>
+</FrameLayout>
