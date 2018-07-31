@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +44,7 @@ public class DetailActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
 
     private boolean mConfigurationHasChanged;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
     @Override
@@ -54,7 +56,23 @@ public class DetailActivity extends AppCompatActivity {
         mTrailerBlock = (RelativeLayout) findViewById(R.id.trailer_block);
 
         mConfigurationHasChanged = false;
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_detail_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                processIntent();
+            }
+        });
+        processIntent();
+    }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mConfigurationHasChanged = true;
+    }
+
+    private void processIntent(){
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity != null) {
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
@@ -67,12 +85,6 @@ public class DetailActivity extends AppCompatActivity {
                 Log.e(TAG, "Missing information in intent. Can't load content");
             }
         }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mConfigurationHasChanged = true;
     }
 
     private void initializeYouTubePlayer() {
@@ -120,6 +132,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void showErrorMessage() {
+        mTrailerBlock.setVisibility(View.INVISIBLE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
@@ -173,6 +186,7 @@ public class DetailActivity extends AppCompatActivity {
             } else {
                 showErrorMessage();
             }
+            mSwipeRefreshLayout.setRefreshing(false);
         }
 
         private void loadMovieDetails() {
