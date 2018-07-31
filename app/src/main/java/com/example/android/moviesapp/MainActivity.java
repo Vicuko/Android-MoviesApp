@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     }
 
     @Override
-    public void onClick(HashMap dataForDetail, int adapterPosition) {
+    public void onClick(HashMap dataForDetail) {
         Context context = this;
         Class destinationClass = DetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);

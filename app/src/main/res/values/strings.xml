@@ -25,4 +25,7 @@
     <!--Strings for activity_main layout-->
     <string name="non_loading_message">There has been an error, please check your Internet connection and try again</string>
 
+    <!--Strings for activity_detail layout-->
+    <string name="trailer_button">Trailer #</string>
+
 </resources>

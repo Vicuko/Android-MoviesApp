@@ -22,7 +22,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     private final MoviesAdapterOnClickHandler mClickHandler;
 
     public interface MoviesAdapterOnClickHandler {
-        void onClick(HashMap dataForDetail, int adapterPosition);
+        void onClick(HashMap dataForDetail);
     }
 
     public MoviesAdapter(MoviesAdapterOnClickHandler clickHandler) {
@@ -42,7 +42,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
             HashMap dataForDetail = mMoviesData[adapterPosition];
-            mClickHandler.onClick(dataForDetail, adapterPosition);
+            mClickHandler.onClick(dataForDetail);
         }
     }
 

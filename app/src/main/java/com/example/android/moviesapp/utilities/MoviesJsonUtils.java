@@ -152,7 +152,7 @@ public class MoviesJsonUtils {
         parsedMovieDetailsHash.put(MOVIE_TAGLINE, tagline);
 
         parsedMovieDetailsHash.put(MOVIE_GENRES, genresResult);
-        parsedMovieDetailsHash.put(MOVIE_PRODUCTION_COMPANIES_NAME, companiesResult);
+        parsedMovieDetailsHash.put(MOVIE_PRODUCTION_COMPANIES, companiesResult);
         parsedMovieDetailsHash.put(MOVIE_PRODUCTION_COMPANIES_LOGO, productionCompaniesLogos);
 
         return parsedMovieDetailsHash;
