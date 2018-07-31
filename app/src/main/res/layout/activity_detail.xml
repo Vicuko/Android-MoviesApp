@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -47,15 +47,99 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/trailer_youtube_view" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/content_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/trailer_block"
+                android:orientation="vertical"
+                android:visibility="invisible">
 
                 <TextView
-                    android:id="@+id/tagline"
+                    android:id="@+id/tagline_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/trailers_recycler_view" />
+                    android:layout_alignParentTop="true"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:paddingTop="@dimen/general_padding"
+                    android:paddingLeft="@dimen/general_padding"
+                    android:paddingRight="@dimen/general_padding"/>
+
+                <LinearLayout
+                    android:id="@+id/info_block"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_below="@+id/tagline_textview"
+                    android:paddingTop="@dimen/general_padding"
+                    android:paddingLeft="@dimen/general_padding"
+                    android:paddingRight="@dimen/general_padding">
+
+                    <ImageView
+                        android:id="@+id/poster_imageview"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/tagline_textview"
+                        android:layout_weight="2"
+                        android:adjustViewBounds="true"
+                        android:paddingRight="@dimen/general_padding"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/homepage_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/poster_imageview"
+                            android:autoLink="web"
+                            android:linksClickable="true"
+                            android:textColorLink="@color/urlLinks" />
+
+                        <TextView
+                            android:id="@+id/budget_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/poster_imageview" />
+
+                        <TextView
+                            android:id="@+id/genres_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/poster_imageview" />
+
+                        <TextView
+                            android:id="@+id/production_companies_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/poster_imageview" />
+
+                        <TextView
+                            android:id="@+id/vote_average_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/overview_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/info_block"
+                    android:padding="@dimen/general_padding"/>
 
             </RelativeLayout>
-        </FrameLayout>
+        </RelativeLayout>
+
     </ScrollView>
 
 </android.support.v4.widget.SwipeRefreshLayout>

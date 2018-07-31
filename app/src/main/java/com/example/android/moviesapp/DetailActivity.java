@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.OnInitializedListener;
 import com.google.android.youtube.player.YouTubePlayerFragment;
+import com.squareup.picasso.Picasso;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView mErrorMessageDisplay;
 
     private RelativeLayout mTrailerBlock;
+    private RelativeLayout mContentBlock;
     private YouTubePlayerFragment mYouTubePlayerFragment;
     private YouTubePlayer mYouTubePlayer;
     private RecyclerView mRecyclerView;
@@ -55,6 +58,7 @@ public class DetailActivity extends AppCompatActivity {
         mErrorMessageDisplay = (TextView) findViewById(R.id.error_detail_message_display);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.details_loader);
         mTrailerBlock = (RelativeLayout) findViewById(R.id.trailer_block);
+        mContentBlock = (RelativeLayout) findViewById(R.id.content_block);
 
         mConfigurationHasChanged = false;
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_detail_layout);
@@ -73,7 +77,7 @@ public class DetailActivity extends AppCompatActivity {
         mConfigurationHasChanged = true;
     }
 
-    private void processIntent(){
+    private void processIntent() {
         Intent intentThatStartedThisActivity = getIntent();
         if (intentThatStartedThisActivity != null) {
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
@@ -132,8 +136,13 @@ public class DetailActivity extends AppCompatActivity {
         mTrailerBlock.setVisibility(View.INVISIBLE);
     }
 
+    private void showContentBlock() {
+        mContentBlock.setVisibility(View.VISIBLE);
+    }
+
     private void showErrorMessage() {
         mTrailerBlock.setVisibility(View.INVISIBLE);
+        mContentBlock.setVisibility(View.INVISIBLE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
@@ -191,23 +200,53 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         private void loadMovieDetails() {
-            String budget = (String) mMovieDetails.get("budget");
-            String homepage = (String) mMovieDetails.get("homepage");
-            String tagline = (String) mMovieDetails.get("tagline");
-            String genres = (String) mMovieDetails.get("genres");
-            String production_companies = (String) mMovieDetails.get("production_companies");
-            ArrayList<String> videoArray = (ArrayList<String>) mMovieDetails.get("videos");
+            if (mMovieDetails != null && mMovieInfo != null) {
+                String posterUrl = (String) mMovieInfo.get("poster_url");
+                String overview = (String) mMovieInfo.get("overview");
+                String voteAverage = (String) mMovieInfo.get("vote_average");
+                String budget = (String) mMovieDetails.get("budget");
+                String homepage = (String) mMovieDetails.get("homepage");
+                String tagline = (String) mMovieDetails.get("tagline");
+                String genres = (String) mMovieDetails.get("genres");
+                String production_companies = (String) mMovieDetails.get("production_companies");
+                ArrayList<String> videoArray = (ArrayList<String>) mMovieDetails.get("videos");
 
-            if (!videoArray.isEmpty() && mYouTubePlayer!=null) {
-                mYouTubePlayer.cueVideo(videoArray.get(0));
-                mTrailersAdapter.setMoviesData(videoArray);
-                showTrailerBlock();
-            }
-            else if (mConfigurationHasChanged){
-                mTrailersAdapter.setMoviesData(videoArray);
-                showTrailerBlock();
-            }
+                ImageView posterView = (ImageView) findViewById(R.id.poster_imageview);
+                TextView overviewView = (TextView) findViewById(R.id.overview_textview);
+                TextView voteAverageView = (TextView) findViewById(R.id.vote_average_textview);
+                TextView budgetView = (TextView) findViewById(R.id.budget_textview);
+                TextView homepageView = (TextView) findViewById(R.id.homepage_textview);
+                TextView taglineView = (TextView) findViewById(R.id.tagline_textview);
+                TextView genresView = (TextView) findViewById(R.id.genres_textview);
+                TextView productionCompaniesView = (TextView) findViewById(R.id.production_companies_textview);
 
+                if (!videoArray.isEmpty() && mYouTubePlayer != null) {
+                    mYouTubePlayer.cueVideo(videoArray.get(0));
+                    mTrailersAdapter.setMoviesData(videoArray);
+                    showTrailerBlock();
+                } else if (mConfigurationHasChanged) {
+                    mTrailersAdapter.setMoviesData(videoArray);
+                    showTrailerBlock();
+                }
+                Picasso.get().load(posterUrl).into(posterView);
+                setElementToView(overview, overviewView);
+                setElementToView(voteAverage, voteAverageView);
+                setElementToView(budget, budgetView);
+                setElementToView(homepage, homepageView);
+                setElementToView(tagline, taglineView);
+                setElementToView(genres, genresView);
+                setElementToView(production_companies, productionCompaniesView);
+                showContentBlock();
+            }
+        }
+
+        private void setElementToView(String text, TextView textview){
+            if (!text.isEmpty() && !text.equals("null") && !text.equals("0")){
+                textview.setText(text);
+            }
+            else {
+                textview.setVisibility(View.GONE);
+            }
         }
 
     }

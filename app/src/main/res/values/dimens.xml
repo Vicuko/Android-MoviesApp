@@ -7,4 +7,10 @@
     <dimen name="progress_bar_width">42dp</dimen>
     <dimen name="scrollbar_fade_duration">1000</dimen>
 
+    <!--Dimensions for activity_detail layout content-->
+    <dimen name="tagline_text_size"></dimen>
+    <dimen name="overview_text_size"></dimen>
+    <dimen name="info_text_size"></dimen>
+    <dimen name="general_padding">16dp</dimen>
+
 </resources>
