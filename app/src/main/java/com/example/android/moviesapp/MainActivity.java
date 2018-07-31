@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,7 +24,7 @@ import java.util.HashMap;
 
 import static android.widget.GridLayout.VERTICAL;
 
-public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
+public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler{
 
     private RecyclerView mRecyclerView;
     private MoviesAdapter mMoviesAdapter;
@@ -32,10 +33,21 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private TextView mErrorMessageDisplay;
     private ProgressBar mLoadingIndicator;
 
+    private String mFilterCriteria;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new FetchMoviesTask().execute(mFilterCriteria);
+            }
+        });
 
         mErrorMessageDisplay = (TextView) findViewById(R.id.error_message_display);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
@@ -49,12 +61,12 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mRecyclerView.setAdapter(mMoviesAdapter);
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String moviesFilter = sharedPrefs.getString(
+        mFilterCriteria = sharedPrefs.getString(
                 getString(R.string.criteria_key),
                 getString(R.string.criteria_default));
-        String activityTitle = getSelectionTitle(moviesFilter);
+        String activityTitle = getSelectionTitle(mFilterCriteria);
         setTitle(activityTitle);
-        loadMovies(moviesFilter);
+        loadMovies(mFilterCriteria);
     }
 
     private String getSelectionTitle(String preferenceValue){
@@ -150,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             } else {
                 showErrorMessage();
             }
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 }
