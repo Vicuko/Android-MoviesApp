@@ -262,7 +262,7 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         private void setElementToView(int descriptor_id, String text, TextView textview){
-            if (!text.isEmpty() && !text.equals("null") && !text.equals("0")){
+            if (!text.isEmpty() && !text.equals("null") && !text.equals("$0.00")){
                 String descriptor = getResources().getString(descriptor_id);
                 textview.setText(Html.fromHtml("<b>" + descriptor + "</b>" + "&nbsp;" + text));
             }
