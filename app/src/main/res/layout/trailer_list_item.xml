@@ -9,6 +9,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/trailer_youtube_view"
         android:adjustViewBounds="true"
-        android:gravity="center" />
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:drawableRight="@drawable/outline_play_arrow_white_18dp"
+        android:backgroundTint="@color/colorAccent"
+        android:textColor="#FFFFFF"/>
 
 </FrameLayout>
