@@ -232,6 +232,9 @@ public class DetailActivity extends AppCompatActivity {
                     mYouTubePlayer.cueVideo(videoArray.get(0));
                     mTrailersAdapter.setMoviesData(videoArray);
                     showTrailerBlock();
+                    if (videoArray.size()<2){
+                        mRecyclerView.setVisibility(View.GONE);
+                    }
                 } else if (mConfigurationHasChanged) {
                     mTrailersAdapter.setMoviesData(videoArray);
                     showTrailerBlock();
