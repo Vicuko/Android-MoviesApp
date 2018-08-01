@@ -11,10 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,6 +29,7 @@ import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -130,6 +133,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void showTrailerBlock() {
         mTrailerBlock.setVisibility(View.VISIBLE);
+        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
     }
 
     private void hideTrailerBlock() {
@@ -138,6 +142,8 @@ public class DetailActivity extends AppCompatActivity {
 
     private void showContentBlock() {
         mContentBlock.setVisibility(View.VISIBLE);
+        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+
     }
 
     private void showErrorMessage() {
@@ -204,7 +210,8 @@ public class DetailActivity extends AppCompatActivity {
                 String posterUrl = (String) mMovieInfo.get("poster_url");
                 String overview = (String) mMovieInfo.get("overview");
                 String voteAverage = (String) mMovieInfo.get("vote_average");
-                String budget = (String) mMovieDetails.get("budget");
+                Float voteAverageRounded = Float.parseFloat(voteAverage);
+                String budget = NumberFormat.getCurrencyInstance().format(Integer.parseInt((String) mMovieDetails.get("budget")));
                 String homepage = (String) mMovieDetails.get("homepage");
                 String tagline = (String) mMovieDetails.get("tagline");
                 String genres = (String) mMovieDetails.get("genres");
@@ -214,6 +221,7 @@ public class DetailActivity extends AppCompatActivity {
                 ImageView posterView = (ImageView) findViewById(R.id.poster_imageview);
                 TextView overviewView = (TextView) findViewById(R.id.overview_textview);
                 TextView voteAverageView = (TextView) findViewById(R.id.vote_average_textview);
+                RatingBar voteAverageBar = (RatingBar) findViewById(R.id.vote_average_ratingbar);
                 TextView budgetView = (TextView) findViewById(R.id.budget_textview);
                 TextView homepageView = (TextView) findViewById(R.id.homepage_textview);
                 TextView taglineView = (TextView) findViewById(R.id.tagline_textview);
@@ -229,13 +237,14 @@ public class DetailActivity extends AppCompatActivity {
                     showTrailerBlock();
                 }
                 Picasso.get().load(posterUrl).into(posterView);
-                setElementToView(overview, overviewView);
-                setElementToView(voteAverage, voteAverageView);
-                setElementToView(budget, budgetView);
+                setElementToView(R.string.description_descriptor, overview, overviewView);
+                voteAverageBar.setRating(voteAverageRounded/2);
+                setElementToView(R.string.vote_average_descriptor,voteAverage, voteAverageView);
+                setElementToView(R.string.budget_descriptor,budget, budgetView);
                 setElementToView(homepage, homepageView);
                 setElementToView(tagline, taglineView);
-                setElementToView(genres, genresView);
-                setElementToView(production_companies, productionCompaniesView);
+                setElementToView(R.string.genres_descriptor, genres, genresView);
+                setElementToView(R.string.producers_descriptor,production_companies, productionCompaniesView);
                 showContentBlock();
             }
         }
@@ -243,6 +252,16 @@ public class DetailActivity extends AppCompatActivity {
         private void setElementToView(String text, TextView textview){
             if (!text.isEmpty() && !text.equals("null") && !text.equals("0")){
                 textview.setText(text);
+            }
+            else {
+                textview.setVisibility(View.GONE);
+            }
+        }
+
+        private void setElementToView(int descriptor_id, String text, TextView textview){
+            if (!text.isEmpty() && !text.equals("null") && !text.equals("0")){
+                String descriptor = getResources().getString(descriptor_id);
+                textview.setText(Html.fromHtml("<b>" + descriptor + "</b>" + "&nbsp;" + text));
             }
             else {
                 textview.setVisibility(View.GONE);

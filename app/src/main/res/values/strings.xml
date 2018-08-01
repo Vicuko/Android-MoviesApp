@@ -28,5 +28,10 @@
     <!--Strings for activity_detail layout-->
     <string name="trailer_button">Trailer #</string>
     <string name="active_video">It seems trailer #%1$d is already being played</string>
+    <string name="genres_descriptor">Genres:</string>
+    <string name="budget_descriptor">Budget:</string>
+    <string name="producers_descriptor">Producers:</string>
+    <string name="vote_average_descriptor">Vote average:</string>
+    <string name="description_descriptor">Description:</string>
 
 </resources>
