@@ -34,6 +34,7 @@ public class MoviesJsonUtils {
         final String MOVIE_POSTER_PATH = "poster_path";
         final String MOVIE_DESCRIPTION = "overview";
         final String MOVIE_POSTER_URL = "poster_url";
+        final String MOVIE_RELEASE_DATE = "release_date";
 
         final String TMDB_POSTERS_URL = "http://image.tmdb.org/t/p/";
         final String POSTER_SIZE = "w300";
@@ -59,6 +60,7 @@ public class MoviesJsonUtils {
             String voteAverage;
             String posterPath;
             String description;
+            String releaseDate;
             HashMap movieHash = new HashMap();
 
             JSONObject movieObject = moviesArray.getJSONObject(i);
@@ -68,6 +70,8 @@ public class MoviesJsonUtils {
             voteAverage = movieObject.getString(MOVIE_VOTE);
             posterPath = movieObject.getString(MOVIE_POSTER_PATH);
             description = movieObject.getString(MOVIE_DESCRIPTION);
+            releaseDate = movieObject.getString(MOVIE_RELEASE_DATE);
+
 
             Uri builtUri = Uri.parse(TMDB_POSTERS_URL).buildUpon()
                     .appendPath(POSTER_SIZE)
@@ -88,6 +92,7 @@ public class MoviesJsonUtils {
             movieHash.put(MOVIE_VOTE, voteAverage);
             movieHash.put(MOVIE_POSTER_URL, posterUrl);
             movieHash.put(MOVIE_DESCRIPTION, description);
+            movieHash.put(MOVIE_RELEASE_DATE, releaseDate);
 
             parsedMoviesData[i] = movieHash;
         }

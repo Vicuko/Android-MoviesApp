@@ -11,7 +11,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ProgressBar
                 android:id="@+id/details_loader"
@@ -27,8 +27,8 @@
                 android:layout_centerInParent="true"
                 android:padding="@dimen/padding"
                 android:text="@string/non_loading_message"
-                android:textSize="@dimen/standard_text_size"
                 android:textAlignment="center"
+                android:textSize="@dimen/standard_text_size"
                 android:visibility="invisible" />
 
             <RelativeLayout
@@ -84,8 +84,6 @@
                         android:id="@+id/poster_imageview"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_below="@+id/tagline_textview"
                         android:layout_weight="2"
                         android:adjustViewBounds="true"
                         android:paddingRight="@dimen/general_padding" />
@@ -97,28 +95,29 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/release_date_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
                             android:id="@+id/genres_textview"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_toRightOf="@+id/poster_imageview" />
+                            android:layout_height="wrap_content" />
 
                         <TextView
                             android:id="@+id/budget_textview"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_toRightOf="@+id/poster_imageview" />
+                            android:layout_height="wrap_content" />
 
                         <TextView
                             android:id="@+id/production_companies_textview"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_toRightOf="@+id/poster_imageview" />
+                            android:layout_height="wrap_content" />
 
                         <TextView
                             android:id="@+id/homepage_textview"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toRightOf="@+id/poster_imageview"
                             android:autoLink="web"
                             android:linksClickable="true"
                             android:textColorLink="@color/urlLinks" />
@@ -130,9 +129,9 @@
 
                         <RatingBar
                             android:id="@+id/vote_average_ratingbar"
+                            style="@style/Widget.AppCompat.RatingBar.Small"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            style="@style/Widget.AppCompat.RatingBar.Small"/>
+                            android:layout_height="wrap_content" />
 
                     </LinearLayout>
                 </LinearLayout>

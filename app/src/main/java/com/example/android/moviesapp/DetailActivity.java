@@ -29,9 +29,14 @@ import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -211,6 +216,18 @@ public class DetailActivity extends AppCompatActivity {
                 String overview = (String) mMovieInfo.get("overview");
                 String voteAverage = (String) mMovieInfo.get("vote_average");
                 Float voteAverageRounded = Float.parseFloat(voteAverage);
+                String releaseDate = (String) mMovieInfo.get("release_date");
+//                releaseDate = releaseDate.replace("-","/");
+                DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                DateFormat targetFormat = new SimpleDateFormat("EEE, MMM d, yyyy");
+                Date originalReleaseDate = new Date();
+                String parsedReleaseDate = "";
+                try {
+                    originalReleaseDate = originalFormat.parse(releaseDate);
+                    parsedReleaseDate = targetFormat.format(originalReleaseDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 String budget = NumberFormat.getCurrencyInstance().format(Integer.parseInt((String) mMovieDetails.get("budget")));
                 String homepage = (String) mMovieDetails.get("homepage");
                 String tagline = (String) mMovieDetails.get("tagline");
@@ -221,6 +238,7 @@ public class DetailActivity extends AppCompatActivity {
                 ImageView posterView = (ImageView) findViewById(R.id.poster_imageview);
                 TextView overviewView = (TextView) findViewById(R.id.overview_textview);
                 TextView voteAverageView = (TextView) findViewById(R.id.vote_average_textview);
+                TextView releaseDateView = (TextView) findViewById(R.id.release_date_textview);
                 RatingBar voteAverageBar = (RatingBar) findViewById(R.id.vote_average_ratingbar);
                 TextView budgetView = (TextView) findViewById(R.id.budget_textview);
                 TextView homepageView = (TextView) findViewById(R.id.homepage_textview);
@@ -243,6 +261,7 @@ public class DetailActivity extends AppCompatActivity {
                 setElementToView(R.string.description_descriptor, overview, overviewView);
                 voteAverageBar.setRating(voteAverageRounded/2);
                 setElementToView(R.string.vote_average_descriptor,voteAverage, voteAverageView);
+                setElementToView(R.string.release_date_descriptor, parsedReleaseDate, releaseDateView);
                 setElementToView(R.string.budget_descriptor,budget, budgetView);
                 setElementToView(homepage, homepageView);
                 setElementToView(tagline, taglineView);

@@ -36,6 +36,7 @@
     <string name="budget_descriptor">Budget:</string>
     <string name="producers_descriptor">Producers:</string>
     <string name="vote_average_descriptor">Vote average:</string>
+    <string name="release_date_descriptor">Release date:</string>
     <string name="description_descriptor">Description:</string>
 
 </resources>
