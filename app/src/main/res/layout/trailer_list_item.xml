@@ -9,10 +9,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/trailer_youtube_view"
         android:adjustViewBounds="true"
-        android:gravity="center"
+        android:backgroundTint="@color/button_bg_colour"
+        android:drawableStart="@drawable/outline_play_arrow_24px"
         android:textAllCaps="false"
-        android:drawableRight="@drawable/outline_play_arrow_white_18dp"
-        android:backgroundTint="@color/colorAccent"
-        android:textColor="#FFFFFF"/>
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:shadowColor="@color/colorAccent"
+        android:drawableLeft="@drawable/outline_play_arrow_24px"
+        android:textAlignment="center"/>
 
 </FrameLayout>

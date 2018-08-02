@@ -24,9 +24,10 @@ import java.util.HashMap;
 
 import static android.widget.GridLayout.VERTICAL;
 
-public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler{
+public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
 
     private RecyclerView mRecyclerView;
+
     private MoviesAdapter mMoviesAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                updateFilterCriteria();
                 new FetchMoviesTask().execute(mFilterCriteria);
             }
         });
@@ -54,36 +56,49 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mRecyclerView = (RecyclerView) findViewById(R.id.movies_recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new GridLayoutManager(this,2, VERTICAL, false);
+        mLayoutManager = new GridLayoutManager(this, 2, VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mMoviesAdapter = new MoviesAdapter(this);
         mRecyclerView.setAdapter(mMoviesAdapter);
 
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mFilterCriteria = sharedPrefs.getString(
-                getString(R.string.criteria_key),
-                getString(R.string.criteria_default));
+        updateFilterCriteria();
         String activityTitle = getSelectionTitle(mFilterCriteria);
         setTitle(activityTitle);
         loadMovies(mFilterCriteria);
     }
 
-    private String getSelectionTitle(String preferenceValue){
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateFilterCriteria();
+        new FetchMoviesTask().execute(mFilterCriteria);
+    }
+
+    private void updateFilterCriteria (){
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        mFilterCriteria = sharedPrefs.getString(
+                getString(R.string.criteria_key),
+                getString(R.string.criteria_default));
+    }
+
+    private String getSelectionTitle(String preferenceValue) {
         String[] entries = getResources().getStringArray(R.array.criteria_entries);
         String[] values = getResources().getStringArray(R.array.criteria_values);
-        for (int i = 0; i<values.length; i++){
-            if (values[i].equals(preferenceValue)){
+        for (int i = 0; i < values.length; i++) {
+            if (values[i].equals(preferenceValue)) {
                 return entries[i];
             }
         }
         return (String) this.getApplicationInfo().loadLabel(this.getPackageManager());
     }
 
-    private void loadMovies(String filter_criteria){
+    private void loadMovies(String filter_criteria) {
         showPosters();
         new FetchMoviesTask().execute(filter_criteria);
-    };
+    }
+
+    ;
 
     private void showPosters() {
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
@@ -105,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_preferences){
+        if (id == R.id.action_preferences) {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsIntent);
             return true;
@@ -122,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         startActivity(intentToStartDetailActivity);
     }
 
-    public class FetchMoviesTask extends AsyncTask<String, Void, HashMap[]>{
+    public class FetchMoviesTask extends AsyncTask<String, Void, HashMap[]> {
 
         @Override
         protected void onPreExecute() {
@@ -156,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         @Override
         protected void onPostExecute(HashMap[] moviesData) {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (moviesData!= null) {
+            if (moviesData != null) {
                 showPosters();
                 mMoviesAdapter.setMoviesData(moviesData);
             } else {

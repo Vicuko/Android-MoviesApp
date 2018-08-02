@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="urlLinks">#0645AD</color></resources>
+
+    <!--Colours for activity_detail layout-->
+    <color name="urlLinks">#0645AD</color>
+    <color name="button_bg_colour">#FFFFFF</color>
+</resources>
+
+

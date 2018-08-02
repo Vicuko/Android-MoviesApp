@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MoviesApp</string>
+    <string name="app_name">Movies</string>
 
     <!--Strings for menu elements-->
     <string name="preferences">Preferences</string>
@@ -26,7 +26,7 @@
     <string name="non_loading_message">There has been an error, please check your Internet connection and try again</string>
 
     <!--Strings for activity_detail layout-->
-    <string name="trailer_button">Trailer #</string>
+    <string name="trailer_button">Trailer\ </string>
     <string name="active_video">It seems trailer #%1$d is already being played</string>
     <string name="genres_descriptor">Genres:</string>
     <string name="budget_descriptor">Budget:</string>
