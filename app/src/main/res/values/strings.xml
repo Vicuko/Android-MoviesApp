@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Movies</string>
 
+    <!--Fields for corresponding api keys-->
+    <string name="api_key"></string>
+    <string name="youtube_api_key"></string>
+
     <!--Strings for menu elements-->
     <string name="preferences">Preferences</string>
     <string name="preferences_title">Movies preferences</string>
