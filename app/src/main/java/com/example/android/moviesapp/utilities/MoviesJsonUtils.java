@@ -224,6 +224,8 @@ public class MoviesJsonUtils {
         final String REVIEW_AUTHOR = "author";
         final String REVIEW_CONTENT = "content";
 
+        final String REVIEW_CODE = "reviews";
+
         JSONObject movieReviewsJson = new JSONObject(movieReviewsJsonStr);
 
         if (movieReviewsJson.has(RESPONSE_CODE)) {
@@ -237,17 +239,19 @@ public class MoviesJsonUtils {
         String totalPages = movieReviewsJson.getString(REVIEW_TOTAL_PAGES);
 
         JSONArray reviewsList = movieReviewsJson.getJSONArray(REVIEW_RESULTS);
+        HashMap parsedReviewsContentHash = new HashMap();
         HashMap parsedReviewsHash = new HashMap();
 
         for (int i = 0; i < reviewsList.length(); i++) {
             JSONObject currentMovieInList = reviewsList.getJSONObject(i);
             String author = currentMovieInList.getString(REVIEW_AUTHOR);
             String content = currentMovieInList.getString(REVIEW_CONTENT);
-            parsedReviewsHash.put(author, content);
+            parsedReviewsContentHash.put(author, content);
         }
-        parsedReviewsHash.put(REVIEW_CURRENT_PAGE, currentPage);
-        parsedReviewsHash.put(REVIEW_TOTAL_PAGES, totalPages);
+        parsedReviewsContentHash.put(REVIEW_CURRENT_PAGE, currentPage);
+        parsedReviewsContentHash.put(REVIEW_TOTAL_PAGES, totalPages);
 
+        parsedReviewsHash.put(REVIEW_CODE, parsedReviewsContentHash);
         return parsedReviewsHash;
     }
 

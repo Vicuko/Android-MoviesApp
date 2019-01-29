@@ -174,6 +174,7 @@ public class DetailActivity extends AppCompatActivity {
             String movieId = params[0];
             URL movieDetailsUrl = NetworkUtils.buildDetailsUrl(DetailActivity.this, movieId);
             URL movieVideosUrl = NetworkUtils.buildVideosUrl(DetailActivity.this, movieId);
+            URL reviewsUrl = NetworkUtils.buildReviewsUrl(DetailActivity.this, movieId);
 
             try {
                 String jsonMovieDetailsResponse = NetworkUtils
@@ -182,13 +183,21 @@ public class DetailActivity extends AppCompatActivity {
                 String jsonMovieVideosResponse = NetworkUtils
                         .getResponseFromHttpUrl(movieVideosUrl);
 
+                String jsonReviewsResponse = NetworkUtils
+                        .getResponseFromHttpUrl(reviewsUrl);
+
                 HashMap detailsJsonMovieData = MoviesJsonUtils
                         .getMovieDetailsFromJson(jsonMovieDetailsResponse);
 
                 HashMap videosJsonMovieData = MoviesJsonUtils
                         .getMovieVideosFromJson(jsonMovieVideosResponse);
 
+                HashMap movieReviewsData = MoviesJsonUtils
+                        .getMovieReviewsFromJson(jsonReviewsResponse);
+
                 detailsJsonMovieData.putAll(videosJsonMovieData);
+
+                detailsJsonMovieData.putAll(movieReviewsData);
 
                 return detailsJsonMovieData;
 
