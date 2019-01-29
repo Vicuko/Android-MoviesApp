@@ -210,4 +210,45 @@ public class MoviesJsonUtils {
         return parsedMovieVideosHash;
     }
 
+    public static HashMap getMovieReviewsFromJson(String movieReviewsJsonStr)
+            throws JSONException {
+
+        final String TAG = MoviesJsonUtils.class.getSimpleName();
+        final String RESPONSE_CODE = "status_code";
+        final String RESPONSE_MESSAGE = "status_message";
+
+        final String REVIEW_CURRENT_PAGE = "page";
+        final String REVIEW_TOTAL_PAGES = "total_pages";
+
+        final String REVIEW_RESULTS = "results";
+        final String REVIEW_AUTHOR = "author";
+        final String REVIEW_CONTENT = "content";
+
+        JSONObject movieReviewsJson = new JSONObject(movieReviewsJsonStr);
+
+        if (movieReviewsJson.has(RESPONSE_CODE)) {
+            int errorCode = movieReviewsJson.getInt(RESPONSE_CODE);
+            String errorMessage = movieReviewsJson.getString(RESPONSE_MESSAGE);
+            Log.e(TAG, RESPONSE_CODE + ":" + errorCode + ", " + RESPONSE_MESSAGE + ":" + errorMessage);
+            return null;
+        }
+
+        String currentPage = movieReviewsJson.getString(REVIEW_CURRENT_PAGE);
+        String totalPages = movieReviewsJson.getString(REVIEW_TOTAL_PAGES);
+
+        JSONArray reviewsList = movieReviewsJson.getJSONArray(REVIEW_RESULTS);
+        HashMap parsedReviewsHash = new HashMap();
+
+        for (int i = 0; i < reviewsList.length(); i++) {
+            JSONObject currentMovieInList = reviewsList.getJSONObject(i);
+            String author = currentMovieInList.getString(REVIEW_AUTHOR);
+            String content = currentMovieInList.getString(REVIEW_CONTENT);
+            parsedReviewsHash.put(author, content);
+        }
+        parsedReviewsHash.put(REVIEW_CURRENT_PAGE, currentPage);
+        parsedReviewsHash.put(REVIEW_TOTAL_PAGES, totalPages);
+
+        return parsedReviewsHash;
+    }
+
 }
