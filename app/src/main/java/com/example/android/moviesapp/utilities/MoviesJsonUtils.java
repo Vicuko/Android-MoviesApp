@@ -61,7 +61,7 @@ public class MoviesJsonUtils {
             String posterPath;
             String description;
             String releaseDate;
-            HashMap movieHash = new HashMap();
+            HashMap<String, String> movieHash = new HashMap<>();
 
             JSONObject movieObject = moviesArray.getJSONObject(i);
 
@@ -85,6 +85,7 @@ public class MoviesJsonUtils {
                 e.printStackTrace();
             }
 
+            assert url != null;
             String posterUrl = url.toString();
 
             movieHash.put(MOVIE_ID, id);
@@ -102,7 +103,7 @@ public class MoviesJsonUtils {
 
     @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static HashMap getMovieDetailsFromJson(String movieDetailsJsonStr)
+    public static HashMap<String, java.io.Serializable> getMovieDetailsFromJson(String movieDetailsJsonStr)
             throws JSONException {
 
         final String TAG = MoviesJsonUtils.class.getSimpleName();
@@ -127,7 +128,7 @@ public class MoviesJsonUtils {
             return null;
         }
 
-        HashMap parsedMovieDetailsHash = new HashMap();
+        HashMap<String, java.io.Serializable> parsedMovieDetailsHash = new HashMap<String, java.io.Serializable>();
 
         String budget = movieDetailsJson.getString(MOVIE_BUDGET);
         String homepage = movieDetailsJson.getString(MOVIE_HOMEPAGE);
@@ -164,7 +165,7 @@ public class MoviesJsonUtils {
         return parsedMovieDetailsHash;
     }
 
-    public static HashMap getMovieVideosFromJson(String movieVideosJsonStr)
+    public static HashMap<String, ArrayList<String>> getMovieVideosFromJson(String movieVideosJsonStr)
             throws JSONException {
 
         final String TAG = MoviesJsonUtils.class.getSimpleName();
@@ -192,7 +193,7 @@ public class MoviesJsonUtils {
 
         JSONArray movieList = movieVideosJson.getJSONArray(MOVIE_VIDEO_RESULTS);
         ArrayList<String> parsedMovieVideos = new ArrayList<String>();
-        HashMap parsedMovieVideosHash = new HashMap();
+        HashMap<String, ArrayList<String>> parsedMovieVideosHash = new HashMap<String, ArrayList<String>>();
 
         for (int i = 0; i < movieList.length(); i++) {
             JSONObject currentMovieInList = movieList.getJSONObject(i);
