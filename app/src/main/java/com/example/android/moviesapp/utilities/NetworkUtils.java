@@ -73,7 +73,7 @@ public class NetworkUtils {
     }
 
     private static String getApiKey(Context context) {
-        return context.getApplicationContext().getResources().getString(R.string.api_key);
+        return context.getString(R.string.tmdb_api_key);
     }
 
     private static URL getUrlFromUri(Uri builtUri) {
