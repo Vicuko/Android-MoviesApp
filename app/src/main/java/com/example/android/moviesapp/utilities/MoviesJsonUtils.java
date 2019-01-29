@@ -61,7 +61,7 @@ public class MoviesJsonUtils {
             String posterPath;
             String description;
             String releaseDate;
-            HashMap<String, String> movieHash = new HashMap<>();
+            HashMap movieHash = new HashMap();
 
             JSONObject movieObject = moviesArray.getJSONObject(i);
 
@@ -103,7 +103,7 @@ public class MoviesJsonUtils {
 
     @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static HashMap<String, java.io.Serializable> getMovieDetailsFromJson(String movieDetailsJsonStr)
+    public static HashMap getMovieDetailsFromJson(String movieDetailsJsonStr)
             throws JSONException {
 
         final String TAG = MoviesJsonUtils.class.getSimpleName();
@@ -128,7 +128,7 @@ public class MoviesJsonUtils {
             return null;
         }
 
-        HashMap<String, java.io.Serializable> parsedMovieDetailsHash = new HashMap<String, java.io.Serializable>();
+        HashMap parsedMovieDetailsHash = new HashMap();
 
         String budget = movieDetailsJson.getString(MOVIE_BUDGET);
         String homepage = movieDetailsJson.getString(MOVIE_HOMEPAGE);
@@ -165,7 +165,7 @@ public class MoviesJsonUtils {
         return parsedMovieDetailsHash;
     }
 
-    public static HashMap<String, ArrayList<String>> getMovieVideosFromJson(String movieVideosJsonStr)
+    public static HashMap getMovieVideosFromJson(String movieVideosJsonStr)
             throws JSONException {
 
         final String TAG = MoviesJsonUtils.class.getSimpleName();
@@ -193,7 +193,7 @@ public class MoviesJsonUtils {
 
         JSONArray movieList = movieVideosJson.getJSONArray(MOVIE_VIDEO_RESULTS);
         ArrayList<String> parsedMovieVideos = new ArrayList<String>();
-        HashMap<String, ArrayList<String>> parsedMovieVideosHash = new HashMap<String, ArrayList<String>>();
+        HashMap parsedMovieVideosHash = new HashMap();
 
         for (int i = 0; i < movieList.length(); i++) {
             JSONObject currentMovieInList = movieList.getJSONObject(i);
