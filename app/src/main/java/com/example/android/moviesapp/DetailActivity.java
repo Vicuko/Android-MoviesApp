@@ -51,9 +51,13 @@ public class DetailActivity extends AppCompatActivity {
     private RelativeLayout mContentBlock;
     private YouTubePlayerFragment mYouTubePlayerFragment;
     private YouTubePlayer mYouTubePlayer;
-    private RecyclerView mRecyclerView;
+    private RecyclerView mTrailersRecyclerView;
     private TrailersAdapter mTrailersAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.LayoutManager mTrailersLayoutManager;
+
+    private RecyclerView mReviewsRecyclerView;
+    private ReviewsAdapter mReviewsAdapter;
+    private RecyclerView.LayoutManager mReviewsLayoutManager;
 
     private boolean mConfigurationHasChanged;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -92,6 +96,9 @@ public class DetailActivity extends AppCompatActivity {
                 mMovieInfo = (HashMap) intentThatStartedThisActivity.getSerializableExtra(Intent.EXTRA_TEXT);
                 setTitle((String) mMovieInfo.get("title"));
                 initializeYouTubePlayer();
+
+//              TODO: Add star to favorite Movie on the top bar
+
                 new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
             } else {
                 showErrorMessage();
@@ -126,14 +133,14 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setUpRecyclerView() {
-        mRecyclerView = findViewById(R.id.trailers_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
+        mTrailersRecyclerView = findViewById(R.id.trailers_recycler_view);
+        mTrailersRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new GridLayoutManager(this, 3, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mTrailersLayoutManager = new GridLayoutManager(this, 3, LinearLayoutManager.VERTICAL, false);
+        mTrailersRecyclerView.setLayoutManager(mTrailersLayoutManager);
 
         mTrailersAdapter = new TrailersAdapter(this, mYouTubePlayer);
-        mRecyclerView.setAdapter(mTrailersAdapter);
+        mTrailersRecyclerView.setAdapter(mTrailersAdapter);
     }
 
     private void showTrailerBlock() {
@@ -244,6 +251,8 @@ public class DetailActivity extends AppCompatActivity {
                 String production_companies = (String) mMovieDetails.get("production_companies");
                 ArrayList<String> videoArray = (ArrayList<String>) mMovieDetails.get("videos");
 
+//              TODO: Save data from JSON into HashMap to be handled by the adapter in order to load all the comments.
+
                 ImageView posterView = (ImageView) findViewById(R.id.poster_imageview);
                 TextView overviewView = (TextView) findViewById(R.id.overview_textview);
                 TextView voteAverageView = (TextView) findViewById(R.id.vote_average_textview);
@@ -260,7 +269,7 @@ public class DetailActivity extends AppCompatActivity {
                     mTrailersAdapter.setMoviesData(videoArray);
                     showTrailerBlock();
                     if (videoArray.size()<2){
-                        mRecyclerView.setVisibility(View.GONE);
+                        mTrailersRecyclerView.setVisibility(View.GONE);
                     }
                 } else if (mConfigurationHasChanged) {
                     mTrailersAdapter.setMoviesData(videoArray);

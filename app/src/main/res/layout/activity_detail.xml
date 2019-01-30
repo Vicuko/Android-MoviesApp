@@ -143,11 +143,21 @@
                     android:layout_below="@+id/info_block"
                     android:padding="@dimen/general_padding" />
 
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:id="@+id/division_line"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="@dimen/general_margin"
+                    android:layout_marginTop="@dimen/general_margin"
+                    android:background="@color/colorPrimaryDark"
+                    android:layout_below="@id/overview_textview"/>
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/reviews_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/overview_textview"/>
+                    android:layout_below="@id/division_line"
+                    android:visibility="gone"/>
 
             </RelativeLayout>
         </RelativeLayout>
