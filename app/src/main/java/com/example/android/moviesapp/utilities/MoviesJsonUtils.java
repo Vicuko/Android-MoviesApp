@@ -217,9 +217,6 @@ public class MoviesJsonUtils {
         final String RESPONSE_CODE = "status_code";
         final String RESPONSE_MESSAGE = "status_message";
 
-        final String REVIEW_CURRENT_PAGE = "page";
-        final String REVIEW_TOTAL_PAGES = "total_pages";
-
         final String REVIEW_RESULTS = "results";
         final String REVIEW_AUTHOR = "author";
         final String REVIEW_CONTENT = "content";
@@ -235,9 +232,6 @@ public class MoviesJsonUtils {
             return null;
         }
 
-        String currentPage = movieReviewsJson.getString(REVIEW_CURRENT_PAGE);
-        String totalPages = movieReviewsJson.getString(REVIEW_TOTAL_PAGES);
-
         JSONArray reviewsList = movieReviewsJson.getJSONArray(REVIEW_RESULTS);
         HashMap parsedReviewsContentHash = new HashMap();
         HashMap parsedReviewsHash = new HashMap();
@@ -248,8 +242,6 @@ public class MoviesJsonUtils {
             String content = currentMovieInList.getString(REVIEW_CONTENT);
             parsedReviewsContentHash.put(author, content);
         }
-        parsedReviewsContentHash.put(REVIEW_CURRENT_PAGE, currentPage);
-        parsedReviewsContentHash.put(REVIEW_TOTAL_PAGES, totalPages);
 
         parsedReviewsHash.put(REVIEW_CODE, parsedReviewsContentHash);
         return parsedReviewsHash;

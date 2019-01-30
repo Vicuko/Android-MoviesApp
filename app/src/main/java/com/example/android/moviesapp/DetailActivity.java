@@ -250,8 +250,7 @@ public class DetailActivity extends AppCompatActivity {
                 String genres = (String) mMovieDetails.get("genres");
                 String production_companies = (String) mMovieDetails.get("production_companies");
                 ArrayList<String> videoArray = (ArrayList<String>) mMovieDetails.get("videos");
-
-//              TODO: Save data from JSON into HashMap to be handled by the adapter in order to load all the comments.
+                HashMap reviewsHash = (HashMap) mMovieDetails.get("reviews");
 
                 ImageView posterView = (ImageView) findViewById(R.id.poster_imageview);
                 TextView overviewView = (TextView) findViewById(R.id.overview_textview);
@@ -264,20 +263,9 @@ public class DetailActivity extends AppCompatActivity {
                 TextView genresView = (TextView) findViewById(R.id.genres_textview);
                 TextView productionCompaniesView = (TextView) findViewById(R.id.production_companies_textview);
 
+                trailersLoad(videoArray);
+                reviewsLoad(reviewsHash);
 
-
-
-                if (!videoArray.isEmpty() && mYouTubePlayer != null) {
-                    mYouTubePlayer.cueVideo(videoArray.get(0));
-                    mTrailersAdapter.setMoviesData(videoArray);
-                    showTrailerBlock();
-                    if (videoArray.size()<2){
-                        mTrailersRecyclerView.setVisibility(View.GONE);
-                    }
-                } else if (mConfigurationHasChanged) {
-                    mTrailersAdapter.setMoviesData(videoArray);
-                    showTrailerBlock();
-                }
                 Picasso.get().load(posterUrl).into(posterView);
                 setElementToView(R.string.description_descriptor, overview, overviewView);
                 voteAverageBar.setRating(voteAverageRounded/2);
@@ -290,6 +278,34 @@ public class DetailActivity extends AppCompatActivity {
                 setElementToView(R.string.producers_descriptor,production_companies, productionCompaniesView);
                 showContentBlock();
             }
+        }
+
+        private void trailersLoad(ArrayList<String> videoArray) {
+            if (!videoArray.isEmpty() && mYouTubePlayer != null) {
+                mYouTubePlayer.cueVideo(videoArray.get(0));
+                mTrailersAdapter.setMoviesData(videoArray);
+                showTrailerBlock();
+                if (videoArray.size()<2){
+                    mTrailersRecyclerView.setVisibility(View.GONE);
+                }
+            } else if (mConfigurationHasChanged) {
+                mTrailersAdapter.setMoviesData(videoArray);
+                showTrailerBlock();
+            }
+        }
+
+        private void reviewsLoad(HashMap reviewsHash) {
+            if(!reviewsHash.isEmpty()){
+                mReviewsRecyclerView = (RecyclerView) findViewById(R.id.reviews_recycler_view);
+                mReviewsRecyclerView.setHasFixedSize(true);
+
+                mReviewsLayoutManager = new LinearLayoutManager(getParent());
+                mReviewsRecyclerView.setLayoutManager(mReviewsLayoutManager);
+
+                mReviewsAdapter = new ReviewsAdapter(reviewsHash);
+                mReviewsRecyclerView.setAdapter(mReviewsAdapter);
+            }
+            return;
         }
 
         private void setElementToView(String text, TextView textview){
@@ -311,6 +327,12 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
 
+
+
+
+
     }
+
+
 
 }
