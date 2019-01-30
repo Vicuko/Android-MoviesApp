@@ -16,7 +16,5 @@
 
     <!--Dimension for reviews layout content-->
     <dimen name="reviews_general_margin">8dp</dimen>
-    <dimen name="review_content_text_size">10sp</dimen>
-    <dimen name="review_author_text_size">10sp</dimen>
 
 </resources>
