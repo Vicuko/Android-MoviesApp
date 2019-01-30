@@ -49,8 +49,27 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsA
 
     @Override
     public void onBindViewHolder(@NonNull ReviewsAdapterViewHolder holder, int position) {
+        int reviewLength = mReviewsContentArray[position].length();
+        String shortText;
+        String longText;
+        if (reviewLength>200) {
+            shortText = mReviewsContentArray[position].substring(0,200) + "...";
+            longText = mReviewsContentArray[position];
+            holder.mContentTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (holder.mContentTextView.getText().length()>203){
+                        holder.mContentTextView.setText(shortText);
+                    } else {
+                        holder.mContentTextView.setText(longText);
+                    }
+                }
+            });
+        } else {
+            shortText = mReviewsContentArray[position];
+        }
+        holder.mContentTextView.setText(shortText);
         holder.mAuthorTextView.setText(mReviewsAuthorsArray[position]);
-        holder.mContentTextView.setText(mReviewsContentArray[position]);
     }
 
     @Override
