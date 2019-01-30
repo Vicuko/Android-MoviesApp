@@ -149,7 +149,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/overview_textview"
                     android:paddingLeft="@dimen/general_padding"
-                    android:paddingRight="@dimen/general_padding">
+                    android:paddingRight="@dimen/general_padding"
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/division_line"

@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -46,6 +47,7 @@ public class DetailActivity extends AppCompatActivity {
     private HashMap mMovieDetails;
 
     private ProgressBar mLoadingIndicator;
+
     private TextView mErrorMessageDisplay;
 
     private RelativeLayout mTrailerBlock;
@@ -84,6 +86,12 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
         processIntent();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.detail_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -271,14 +279,14 @@ public class DetailActivity extends AppCompatActivity {
 
                 Picasso.get().load(posterUrl).into(posterView);
                 setElementToView(R.string.description_descriptor, overview, overviewView);
-                voteAverageBar.setRating(voteAverageRounded/2);
-                setElementToView(R.string.vote_average_descriptor,voteAverage, voteAverageView);
+                voteAverageBar.setRating(voteAverageRounded / 2);
+                setElementToView(R.string.vote_average_descriptor, voteAverage, voteAverageView);
                 setElementToView(R.string.release_date_descriptor, parsedReleaseDate, releaseDateView);
-                setElementToView(R.string.budget_descriptor,budget, budgetView);
+                setElementToView(R.string.budget_descriptor, budget, budgetView);
                 setElementToView(homepage, homepageView);
                 setElementToView(tagline, taglineView);
                 setElementToView(R.string.genres_descriptor, genres, genresView);
-                setElementToView(R.string.producers_descriptor,production_companies, productionCompaniesView);
+                setElementToView(R.string.producers_descriptor, production_companies, productionCompaniesView);
                 showContentBlock();
             }
         }
@@ -288,7 +296,7 @@ public class DetailActivity extends AppCompatActivity {
                 mYouTubePlayer.cueVideo(videoArray.get(0));
                 mTrailersAdapter.setMoviesData(videoArray);
                 showTrailerBlock();
-                if (videoArray.size()<2){
+                if (videoArray.size() < 2) {
                     mTrailersRecyclerView.setVisibility(View.GONE);
                 }
             } else if (mConfigurationHasChanged) {
@@ -298,7 +306,7 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         private void reviewsLoad(LinkedHashMap reviewsHash) {
-            if(!reviewsHash.isEmpty()){
+            if (!reviewsHash.isEmpty()) {
                 mReviewsRecyclerView = (RecyclerView) findViewById(R.id.reviews_recycler_view);
                 mReviewsRecyclerView.setHasFixedSize(true);
 
@@ -313,31 +321,25 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        private void setElementToView(String text, TextView textview){
-            if (!text.isEmpty() && !text.equals("null") && !text.equals("0")){
+        private void setElementToView(String text, TextView textview) {
+            if (!text.isEmpty() && !text.equals("null") && !text.equals("0")) {
                 textview.setText(text);
-            }
-            else {
+            } else {
                 textview.setVisibility(View.GONE);
             }
         }
 
-        private void setElementToView(int descriptor_id, String text, TextView textview){
-            if (!text.isEmpty() && !text.equals("null") && !text.equals("$0.00")){
+        private void setElementToView(int descriptor_id, String text, TextView textview) {
+            if (!text.isEmpty() && !text.equals("null") && !text.equals("$0.00")) {
                 String descriptor = getResources().getString(descriptor_id);
                 textview.setText(Html.fromHtml("<b>" + descriptor + "</b>" + "&nbsp;" + text));
-            }
-            else {
+            } else {
                 textview.setVisibility(View.GONE);
             }
         }
-
-
-
 
 
     }
-
 
 
 }

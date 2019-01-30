@@ -7,7 +7,10 @@
     <!--Colours for activity_detail layout-->
     <color name="urlLinks">#0645AD</color>
     <color name="button_bg_colour">#FFFFFF</color>
-    
+
+    <!--Colours for menu items-->
+    <color  name="favorite">#FFEB3B</color>
+    <color  name="unfavorite">#FFFFFF</color>
 </resources>
 
 
