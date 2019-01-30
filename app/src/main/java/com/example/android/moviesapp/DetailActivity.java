@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity {
@@ -250,7 +251,7 @@ public class DetailActivity extends AppCompatActivity {
                 String genres = (String) mMovieDetails.get("genres");
                 String production_companies = (String) mMovieDetails.get("production_companies");
                 ArrayList<String> videoArray = (ArrayList<String>) mMovieDetails.get("videos");
-                HashMap reviewsHash = (HashMap) mMovieDetails.get("reviews");
+                LinkedHashMap reviewsHash = (LinkedHashMap) mMovieDetails.get("reviews");
 
                 ImageView posterView = (ImageView) findViewById(R.id.poster_imageview);
                 TextView overviewView = (TextView) findViewById(R.id.overview_textview);
@@ -294,7 +295,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
 
-        private void reviewsLoad(HashMap reviewsHash) {
+        private void reviewsLoad(LinkedHashMap reviewsHash) {
             if(!reviewsHash.isEmpty()){
                 mReviewsRecyclerView = (RecyclerView) findViewById(R.id.reviews_recycler_view);
                 mReviewsRecyclerView.setHasFixedSize(true);
@@ -304,6 +305,8 @@ public class DetailActivity extends AppCompatActivity {
 
                 mReviewsAdapter = new ReviewsAdapter(reviewsHash);
                 mReviewsRecyclerView.setAdapter(mReviewsAdapter);
+
+                mReviewsRecyclerView.setVisibility(View.VISIBLE);
             }
             return;
         }

@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Created by Vicuko on 27/7/18.
@@ -233,7 +234,7 @@ public class MoviesJsonUtils {
         }
 
         JSONArray reviewsList = movieReviewsJson.getJSONArray(REVIEW_RESULTS);
-        HashMap parsedReviewsContentHash = new HashMap();
+        LinkedHashMap parsedReviewsContentHash = new LinkedHashMap();
         HashMap parsedReviewsHash = new HashMap();
 
         for (int i = 0; i < reviewsList.length(); i++) {

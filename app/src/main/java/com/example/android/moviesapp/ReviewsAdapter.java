@@ -8,16 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Created by Vicuko on 29/1/19.
  */
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsAdapterViewHolder> {
-    private HashMap<String,String> mReviewsHash;
+    private LinkedHashMap mReviewsHash;
+    private String[] mReviewsAuthorsArray;
+    private String[] mReviewsContentArray;
 
     public static class ReviewsAdapterViewHolder extends RecyclerView.ViewHolder {
-
         public TextView mAuthorTextView;
         public TextView mContentTextView;
 
@@ -28,8 +29,10 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsA
         }
     }
 
-    public ReviewsAdapter(HashMap reviewsHash) {
+    public ReviewsAdapter(LinkedHashMap reviewsHash) {
         mReviewsHash = reviewsHash;
+        mReviewsAuthorsArray = (String[]) reviewsHash.keySet().toArray(new String[0]);
+        mReviewsContentArray = (String[]) reviewsHash.values().toArray(new String[0]);
     }
 
     @NonNull
@@ -46,12 +49,13 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsA
 
     @Override
     public void onBindViewHolder(@NonNull ReviewsAdapterViewHolder holder, int position) {
-
+        holder.mAuthorTextView.setText(mReviewsAuthorsArray[position]);
+        holder.mContentTextView.setText(mReviewsContentArray[position]);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mReviewsHash.size();
     }
 
 

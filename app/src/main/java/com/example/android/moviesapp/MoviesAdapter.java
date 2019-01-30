@@ -62,7 +62,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     public void onBindViewHolder(@NonNull MoviesAdapterViewHolder holder, int position) {
         final String MOVIE_POSTER_URL = "poster_url";
         HashMap movieData = mMoviesData[position];
-        String posterUrlForThisMovie = (String) movieData.get("poster_url");
+        String posterUrlForThisMovie = (String) movieData.get(MOVIE_POSTER_URL);
         Picasso.get().load(posterUrlForThisMovie).into(holder.mMovieImageView);
     }
 
