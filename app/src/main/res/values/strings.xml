@@ -8,6 +8,7 @@
     <!--Strings for menu elements-->
     <string name="preferences">Preferences</string>
     <string name="preferences_title">Movies preferences</string>
+    <string name="favorite">Favorite</string>
 
     <!--Strings for preferences-->
     <string name="list_title">Show Movies by:</string>
