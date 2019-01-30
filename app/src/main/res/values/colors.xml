@@ -7,6 +7,7 @@
     <!--Colours for activity_detail layout-->
     <color name="urlLinks">#0645AD</color>
     <color name="button_bg_colour">#FFFFFF</color>
+    
 </resources>
 
 
