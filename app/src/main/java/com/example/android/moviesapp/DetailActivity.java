@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -66,6 +68,8 @@ public class DetailActivity extends AppCompatActivity {
     private boolean mConfigurationHasChanged;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    private boolean mFavorite;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,7 @@ public class DetailActivity extends AppCompatActivity {
         mTrailerBlock = (RelativeLayout) findViewById(R.id.trailer_block);
         mContentBlock = (RelativeLayout) findViewById(R.id.content_block);
         mReviewsBlock = (RelativeLayout) findViewById(R.id.reviews_block);
+        mFavorite = false;
 
         mConfigurationHasChanged = false;
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_detail_layout);
@@ -92,6 +97,22 @@ public class DetailActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.detail_menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_favorite){
+            if (!mFavorite) {
+                item.setIcon(R.drawable.ic_baseline_star);
+                mFavorite = true;
+            }
+            else {
+                item.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_border));
+                mFavorite = false;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
