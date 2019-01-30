@@ -49,9 +49,11 @@ public class DetailActivity extends AppCompatActivity {
 
     private RelativeLayout mTrailerBlock;
     private RelativeLayout mContentBlock;
+    private YouTubePlayerFragment mYouTubePlayerFragment;
     private YouTubePlayer mYouTubePlayer;
     private RecyclerView mTrailersRecyclerView;
     private TrailersAdapter mTrailersAdapter;
+    private RecyclerView.LayoutManager mTrailersLayoutManager;
 
     private RecyclerView mReviewsRecyclerView;
     private ReviewsAdapter mReviewsAdapter;
@@ -107,12 +109,12 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initializeYouTubePlayer() {
         String api_key = getApplicationContext().getResources().getString(R.string.youtube_api_key);
-        YouTubePlayerFragment youTubePlayerFragment = (YouTubePlayerFragment) getFragmentManager().findFragmentById(R.id.trailer_youtube_view);
+        mYouTubePlayerFragment = (YouTubePlayerFragment) getFragmentManager().findFragmentById(R.id.trailer_youtube_view);
 
-        if (youTubePlayerFragment == null)
+        if (mYouTubePlayerFragment == null)
             return;
 
-        youTubePlayerFragment.initialize(api_key, new OnInitializedListener() {
+        mYouTubePlayerFragment.initialize(api_key, new OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
                 if (!wasRestored) {
@@ -134,8 +136,8 @@ public class DetailActivity extends AppCompatActivity {
         mTrailersRecyclerView = findViewById(R.id.trailers_recycler_view);
         mTrailersRecyclerView.setHasFixedSize(true);
 
-        RecyclerView.LayoutManager trailersLayoutManager = new GridLayoutManager(this, 3, LinearLayoutManager.VERTICAL, false);
-        mTrailersRecyclerView.setLayoutManager(trailersLayoutManager);
+        mTrailersLayoutManager = new GridLayoutManager(this, 3, LinearLayoutManager.VERTICAL, false);
+        mTrailersRecyclerView.setLayoutManager(mTrailersLayoutManager);
 
         mTrailersAdapter = new TrailersAdapter(this, mYouTubePlayer);
         mTrailersRecyclerView.setAdapter(mTrailersAdapter);
