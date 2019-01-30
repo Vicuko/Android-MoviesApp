@@ -50,6 +50,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private RelativeLayout mTrailerBlock;
     private RelativeLayout mContentBlock;
+    private RelativeLayout mReviewsBlock;
     private YouTubePlayerFragment mYouTubePlayerFragment;
     private YouTubePlayer mYouTubePlayer;
     private RecyclerView mTrailersRecyclerView;
@@ -72,6 +73,7 @@ public class DetailActivity extends AppCompatActivity {
         mLoadingIndicator = (ProgressBar) findViewById(R.id.details_loader);
         mTrailerBlock = (RelativeLayout) findViewById(R.id.trailer_block);
         mContentBlock = (RelativeLayout) findViewById(R.id.content_block);
+        mReviewsBlock = (RelativeLayout) findViewById(R.id.reviews_block);
 
         mConfigurationHasChanged = false;
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_detail_layout);
@@ -306,7 +308,7 @@ public class DetailActivity extends AppCompatActivity {
                 mReviewsAdapter = new ReviewsAdapter(reviewsHash);
                 mReviewsRecyclerView.setAdapter(mReviewsAdapter);
 
-                mReviewsRecyclerView.setVisibility(View.VISIBLE);
+                mReviewsBlock.setVisibility(View.VISIBLE);
             }
             return;
         }
