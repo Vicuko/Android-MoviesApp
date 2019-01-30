@@ -97,7 +97,7 @@ public class DetailActivity extends AppCompatActivity {
                 setTitle((String) mMovieInfo.get("title"));
                 initializeYouTubePlayer();
 
-//              TODO: Add star to favorite Movie on the top bar
+//              TODO: Add star to favorite Movie on the top bar that when clicked passes on the info from the intent to the database.
 
                 new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
             } else {

@@ -150,7 +150,8 @@
                     android:layout_marginBottom="@dimen/general_margin"
                     android:layout_marginTop="@dimen/general_margin"
                     android:background="@color/colorPrimaryDark"
-                    android:layout_below="@id/overview_textview"/>
+                    android:layout_below="@id/overview_textview"
+                    android:visibility="gone"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/reviews_recycler_view"
