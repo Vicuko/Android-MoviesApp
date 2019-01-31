@@ -2,6 +2,8 @@ package com.example.android.moviesapp;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.android.moviesapp.database.MovieEntry;
 import com.example.android.moviesapp.utilities.MoviesJsonUtils;
 import com.example.android.moviesapp.utilities.NetworkUtils;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -31,6 +34,7 @@ import com.google.android.youtube.player.YouTubePlayer.OnInitializedListener;
 import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -47,6 +51,7 @@ public class DetailActivity extends AppCompatActivity {
     private static final String TAG = DetailActivity.class.getSimpleName();
     private HashMap mMovieInfo;
     private HashMap mMovieDetails;
+    private MovieEntry mcurrentMovieEntry;
 
     private ProgressBar mLoadingIndicator;
 
@@ -125,9 +130,6 @@ public class DetailActivity extends AppCompatActivity {
         if (intentThatStartedThisActivity != null) {
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
                 mMovieInfo = (HashMap) intentThatStartedThisActivity.getSerializableExtra(Intent.EXTRA_TEXT);
-                setTitle((String) mMovieInfo.get("title"));
-                initializeYouTubePlayer();
-
                 new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
             } else {
                 showErrorMessage();
@@ -184,7 +186,6 @@ public class DetailActivity extends AppCompatActivity {
     private void showContentBlock() {
         mContentBlock.setVisibility(View.VISIBLE);
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-
     }
 
     private void showErrorMessage() {
@@ -258,6 +259,8 @@ public class DetailActivity extends AppCompatActivity {
 
         private void loadMovieDetails() {
             if (mMovieDetails != null && mMovieInfo != null) {
+                int id = Integer.parseInt ((String) mMovieInfo.get("id"));
+                String title = (String) mMovieInfo.get("title");
                 String posterUrl = (String) mMovieInfo.get("poster_url");
                 String overview = (String) mMovieInfo.get("overview");
                 String voteAverage = (String) mMovieInfo.get("vote_average");
@@ -281,6 +284,8 @@ public class DetailActivity extends AppCompatActivity {
                 ArrayList<String> videoArray = (ArrayList<String>) mMovieDetails.get("videos");
                 LinkedHashMap reviewsHash = (LinkedHashMap) mMovieDetails.get("reviews");
 
+                setTitle((String) mMovieInfo.get("title"));
+                initializeYouTubePlayer();
                 ImageView posterView = (ImageView) findViewById(R.id.poster_imageview);
                 TextView overviewView = (TextView) findViewById(R.id.overview_textview);
                 TextView voteAverageView = (TextView) findViewById(R.id.vote_average_textview);
@@ -306,6 +311,15 @@ public class DetailActivity extends AppCompatActivity {
                 setElementToView(R.string.genres_descriptor, genres, genresView);
                 setElementToView(R.string.producers_descriptor, productionCompanies, productionCompaniesView);
                 showContentBlock();
+
+                Bitmap bitmap = ((BitmapDrawable) posterView.getDrawable()).getBitmap();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG,100, baos);
+                byte[] posterInByte = baos.toByteArray();
+
+                mcurrentMovieEntry = new MovieEntry(id, videoArray,title,
+                        tagline,posterInByte,parsedReleaseDate,genres,budget,productionCompanies,
+                        homepage,voteAverageRounded.toString(),overview,reviewsHash);
             }
         }
 
@@ -336,7 +350,6 @@ public class DetailActivity extends AppCompatActivity {
 
                 mReviewsBlock.setVisibility(View.VISIBLE);
             }
-            return;
         }
 
         private void setElementToView(String text, TextView textview) {
