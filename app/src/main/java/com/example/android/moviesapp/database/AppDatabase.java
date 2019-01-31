@@ -3,6 +3,7 @@ package com.example.android.moviesapp.database;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.util.Log;
 
@@ -10,6 +11,7 @@ import android.util.Log;
  * Created by Vicuko on 31/1/19.
  */
 @Database(version = 1, entities = {MovieEntry.class}, exportSchema = false)
+@TypeConverters(DataConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static final String LOG_TAG = AppDatabase.class.getSimpleName();

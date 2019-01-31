@@ -102,12 +102,11 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_favorite){
+        if (id == R.id.action_favorite) {
             if (!mFavorite) {
                 item.setIcon(R.drawable.ic_baseline_star);
                 mFavorite = true;
-            }
-            else {
+            } else {
                 item.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_border));
                 mFavorite = false;
             }
@@ -127,9 +126,8 @@ public class DetailActivity extends AppCompatActivity {
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
                 mMovieInfo = (HashMap) intentThatStartedThisActivity.getSerializableExtra(Intent.EXTRA_TEXT);
                 setTitle((String) mMovieInfo.get("title"));
+                int number = (int) mMovieInfo.get("id");
                 initializeYouTubePlayer();
-
-//              TODO: Add star to favorite Movie on the top bar that when clicked passes on the info from the intent to the database.
 
                 new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
             } else {
@@ -258,6 +256,7 @@ public class DetailActivity extends AppCompatActivity {
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
+
         private void loadMovieDetails() {
             if (mMovieDetails != null && mMovieInfo != null) {
                 String posterUrl = (String) mMovieInfo.get("poster_url");
@@ -265,7 +264,6 @@ public class DetailActivity extends AppCompatActivity {
                 String voteAverage = (String) mMovieInfo.get("vote_average");
                 Float voteAverageRounded = Float.parseFloat(voteAverage);
                 String releaseDate = (String) mMovieInfo.get("release_date");
-//                releaseDate = releaseDate.replace("-","/");
                 DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                 DateFormat targetFormat = new SimpleDateFormat("EEE, MMM d, yyyy");
                 Date originalReleaseDate = new Date();
@@ -280,7 +278,7 @@ public class DetailActivity extends AppCompatActivity {
                 String homepage = (String) mMovieDetails.get("homepage");
                 String tagline = (String) mMovieDetails.get("tagline");
                 String genres = (String) mMovieDetails.get("genres");
-                String production_companies = (String) mMovieDetails.get("production_companies");
+                String productionCompanies = (String) mMovieDetails.get("production_companies");
                 ArrayList<String> videoArray = (ArrayList<String>) mMovieDetails.get("videos");
                 LinkedHashMap reviewsHash = (LinkedHashMap) mMovieDetails.get("reviews");
 
@@ -307,7 +305,7 @@ public class DetailActivity extends AppCompatActivity {
                 setElementToView(homepage, homepageView);
                 setElementToView(tagline, taglineView);
                 setElementToView(R.string.genres_descriptor, genres, genresView);
-                setElementToView(R.string.producers_descriptor, production_companies, productionCompaniesView);
+                setElementToView(R.string.producers_descriptor, productionCompanies, productionCompaniesView);
                 showContentBlock();
             }
         }
