@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,6 +24,7 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.android.moviesapp.database.AppDatabase;
 import com.example.android.moviesapp.database.MovieEntry;
 import com.example.android.moviesapp.utilities.MoviesJsonUtils;
 import com.example.android.moviesapp.utilities.NetworkUtils;
@@ -51,7 +51,9 @@ public class DetailActivity extends AppCompatActivity {
     private static final String TAG = DetailActivity.class.getSimpleName();
     private HashMap mMovieInfo;
     private HashMap mMovieDetails;
-    private MovieEntry mcurrentMovieEntry;
+    private MovieEntry mCurrentMovieEntry;
+
+    private AppDatabase mDatabase;
 
     private ProgressBar mLoadingIndicator;
 
@@ -80,6 +82,7 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        mDatabase = AppDatabase.getInstance(getApplicationContext());
         mErrorMessageDisplay = (TextView) findViewById(R.id.error_detail_message_display);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.details_loader);
         mTrailerBlock = (RelativeLayout) findViewById(R.id.trailer_block);
@@ -108,14 +111,21 @@ public class DetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_favorite) {
-            if (!mFavorite) {
-                AppExecutors
-                item.setIcon(R.drawable.ic_baseline_star);
-                mFavorite = true;
-            } else {
-                item.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_border));
-                mFavorite = false;
-            }
+            AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mFavorite) {
+                        mDatabase.movieDao().insertMovie(mCurrentMovieEntry);
+                        item.setIcon(R.drawable.ic_baseline_star);
+                        mFavorite = true;
+                    } else {
+                        mDatabase.movieDao().deleteMovie(mCurrentMovieEntry);
+                        item.setIcon(R.drawable.ic_baseline_star_border);
+                        mFavorite = false;
+                    }
+                }
+            });
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -131,6 +141,10 @@ public class DetailActivity extends AppCompatActivity {
         if (intentThatStartedThisActivity != null) {
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
                 mMovieInfo = (HashMap) intentThatStartedThisActivity.getSerializableExtra(Intent.EXTRA_TEXT);
+
+
+
+
                 new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
             } else {
                 showErrorMessage();
@@ -260,7 +274,7 @@ public class DetailActivity extends AppCompatActivity {
 
         private void loadMovieDetails() {
             if (mMovieDetails != null && mMovieInfo != null) {
-                int id = Integer.parseInt ((String) mMovieInfo.get("id"));
+                int id = Integer.parseInt((String) mMovieInfo.get("id"));
                 String title = (String) mMovieInfo.get("title");
                 String posterUrl = (String) mMovieInfo.get("poster_url");
                 String overview = (String) mMovieInfo.get("overview");
@@ -315,12 +329,12 @@ public class DetailActivity extends AppCompatActivity {
 
                 Bitmap bitmap = ((BitmapDrawable) posterView.getDrawable()).getBitmap();
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG,100, baos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 byte[] posterInByte = baos.toByteArray();
 
-                mcurrentMovieEntry = new MovieEntry(id, videoArray,title,
-                        tagline,posterInByte,parsedReleaseDate,genres,budget,productionCompanies,
-                        homepage,voteAverageRounded.toString(),overview,reviewsHash);
+                mCurrentMovieEntry = new MovieEntry(id, videoArray, title,
+                        tagline, posterInByte, parsedReleaseDate, genres, budget, productionCompanies,
+                        homepage, voteAverageRounded.toString(), overview, reviewsHash);
             }
         }
 
@@ -370,8 +384,6 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
 
-
     }
-
 
 }
