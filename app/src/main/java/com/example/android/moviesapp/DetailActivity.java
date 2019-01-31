@@ -141,7 +141,10 @@ public class DetailActivity extends AppCompatActivity {
         if (intentThatStartedThisActivity != null) {
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
                 mMovieInfo = (HashMap) intentThatStartedThisActivity.getSerializableExtra(Intent.EXTRA_TEXT);
-                AddMovieViewModelFactory factory = new AddTaskViewModelFactory(mDb, mTaskId);
+                int movieId = Integer.parseInt ((String) mMovieInfo.get("id"));
+                AddMovieViewModelFactory factory = new AddMovieViewModelFactory(mDatabase, movieId);
+                final AddMovieViewModel viewModel
+                        = ViewModelProviders.of(this, factory).get(AddTaskViewModel.class);
 
 
 
