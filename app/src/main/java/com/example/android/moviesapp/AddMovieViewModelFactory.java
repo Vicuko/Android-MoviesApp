@@ -21,7 +21,7 @@ class AddMovieViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
         //noinspection unchecked
-        return (T) new AddMovieViewModel(mAppDatabaseg, mTaskId);
+        return (T) new AddMovieViewModel(mAppDatabase, mTaskId);
     }
 
 }
