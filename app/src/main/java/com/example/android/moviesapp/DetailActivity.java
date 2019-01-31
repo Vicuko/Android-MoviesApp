@@ -109,6 +109,7 @@ public class DetailActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_favorite) {
             if (!mFavorite) {
+                AppExecutors
                 item.setIcon(R.drawable.ic_baseline_star);
                 mFavorite = true;
             } else {
