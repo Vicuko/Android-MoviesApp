@@ -144,15 +144,22 @@ public class DetailActivity extends AppCompatActivity {
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
+                    int resource;
                     if (!mFavorite) {
                         mDatabase.movieDao().insertMovie(mCurrentMovieEntry);
-                        item.setIcon(R.drawable.ic_baseline_star);
+                        resource = R.drawable.ic_baseline_star;
                         mFavorite = true;
                     } else {
                         mDatabase.movieDao().deleteMovie(mCurrentMovieEntry);
-                        item.setIcon(R.drawable.ic_baseline_star_border);
+                        resource = R.drawable.ic_baseline_star_border;
                         mFavorite = false;
                     }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            item.setIcon(resource);
+                        }
+                    });
                 }
             });
 
