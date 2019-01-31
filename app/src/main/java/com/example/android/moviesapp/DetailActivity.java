@@ -58,9 +58,9 @@ public class DetailActivity extends AppCompatActivity {
     private MovieEntry mCurrentMovieEntry;
 
     private AppDatabase mDatabase;
+    private Menu mMenu;
 
     private ProgressBar mLoadingIndicator;
-
     private TextView mErrorMessageDisplay;
 
     private RelativeLayout mTrailerBlock;
@@ -133,6 +133,7 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.detail_menu, menu);
+        mMenu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -362,9 +363,13 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void populateUI(MovieEntry movieEntry) {
+        MenuItem favorite = mMenu.findItem(R.id.action_favorite);
         if (mFavorite) {
+            favorite.setIcon(R.drawable.ic_baseline_star);
             Bitmap bmp = BitmapFactory.decodeByteArray(movieEntry.poster, 0, movieEntry.poster.length);
             mPosterView.setImageBitmap(bmp);
+        }else{
+            favorite.setIcon(R.drawable.ic_baseline_star_border);
         }
         trailersLoad(movieEntry.videoArray);
         reviewsLoad(movieEntry.reviewHash);
