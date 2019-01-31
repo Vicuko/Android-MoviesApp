@@ -126,7 +126,6 @@ public class DetailActivity extends AppCompatActivity {
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
                 mMovieInfo = (HashMap) intentThatStartedThisActivity.getSerializableExtra(Intent.EXTRA_TEXT);
                 setTitle((String) mMovieInfo.get("title"));
-                int number = (int) mMovieInfo.get("id");
                 initializeYouTubePlayer();
 
                 new FetchDetailsTask().execute((String) mMovieInfo.get("id"));

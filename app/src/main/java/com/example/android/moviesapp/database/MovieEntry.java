@@ -3,10 +3,7 @@ package com.example.android.moviesapp.database;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
@@ -15,35 +12,48 @@ import java.util.LinkedHashMap;
 @Entity(tableName = "movies")
 public class MovieEntry {
     @PrimaryKey
-    private int id;
+    public int id;
 
-    private ArrayList<String> videoArray;
-    private String title;
-    private String tagline;
-    private Picasso poster;
-    private String parsedReleaseDate;
-    private String genres;
-    private String budget;
-    private String productionCompanies;
-    private String homepage;
-    private Float voteAverageRounded;
-    private String overview;
-    private LinkedHashMap reviewHash;
+    public ArrayList<String> videoArray;
+    public String title;
+    public String tagline;
+    public byte[] poster;
+    public String parsedReleaseDate;
+    public String genres;
+    public String budget;
+    public String productionCompanies;
+    public String homepage;
+    public String voteAverageRounded;
+    public String overview;
+    public LinkedHashMap reviewHash;
 
-    public MovieEntry (HashMap movieDetails, HashMap movieInfo) {
-        this.id = (int) movieInfo.get("id");
-//        this.videoArray = ;
-//        this.title = ;
-//        this.tagline = ;
-//        this.poster = ;
-//        this.parsedReleaseDate = ;
-//        this.genres = ;
-//        this.budget = ;
-//        this.productionCompanies = ;
-//        this.homepage = ;
-//        this.voteAverageRounded = ;
-//        this.overview = ;
-//        this.reviewHash = ;
+    public MovieEntry (int id,
+                       ArrayList<String> videoArray,
+                       String title,
+                       String tagline,
+                       byte[] poster,
+                       String parsedReleaseDate,
+                       String genres,
+                       String budget,
+                       String productionCompanies,
+                       String homepage,
+                       String voteAverageRounded,
+                       String overview,
+                       LinkedHashMap reviewHash) {
+
+        this.id = id;
+        this.videoArray = videoArray;
+        this.title = title;
+        this.tagline = tagline;
+        this.poster = poster;
+        this.parsedReleaseDate = parsedReleaseDate;
+        this.genres = genres;
+        this.budget = budget;
+        this.productionCompanies = productionCompanies;
+        this.homepage = homepage;
+        this.voteAverageRounded = voteAverageRounded;
+        this.overview = overview;
+        this.reviewHash = reviewHash;
     }
 
 }
