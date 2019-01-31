@@ -10,7 +10,7 @@ import android.util.Log;
 /**
  * Created by Vicuko on 31/1/19.
  */
-@Database(version = 1, entities = {MovieEntry.class}, exportSchema = false)
+@Database(version = 2, entities = {MovieEntry.class}, exportSchema = false)
 @TypeConverters(DataConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 

@@ -1,12 +1,16 @@
 package com.example.android.moviesapp;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -62,6 +66,18 @@ public class DetailActivity extends AppCompatActivity {
     private RelativeLayout mTrailerBlock;
     private RelativeLayout mContentBlock;
     private RelativeLayout mReviewsBlock;
+    private ImageView mPosterView;
+    private TextView mOverviewView;
+    private TextView mVoteAverageView;
+    private TextView mReleaseDateView;
+    private RatingBar mVoteAverageBar;
+    private TextView mBudgetView;
+    private TextView mHomepageView;
+    private TextView mTaglineView;
+    private TextView mGenresView;
+    private TextView mProductionCompaniesView;
+
+
     private YouTubePlayerFragment mYouTubePlayerFragment;
     private YouTubePlayer mYouTubePlayer;
     private RecyclerView mTrailersRecyclerView;
@@ -83,12 +99,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         mDatabase = AppDatabase.getInstance(getApplicationContext());
-        mErrorMessageDisplay = (TextView) findViewById(R.id.error_detail_message_display);
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.details_loader);
-        mTrailerBlock = (RelativeLayout) findViewById(R.id.trailer_block);
-        mContentBlock = (RelativeLayout) findViewById(R.id.content_block);
-        mReviewsBlock = (RelativeLayout) findViewById(R.id.reviews_block);
-        mFavorite = false;
+        initViews();
 
         mConfigurationHasChanged = false;
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_detail_layout);
@@ -99,6 +110,24 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
         processIntent();
+    }
+
+    private void initViews() {
+        mErrorMessageDisplay = (TextView) findViewById(R.id.error_detail_message_display);
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.details_loader);
+        mTrailerBlock = (RelativeLayout) findViewById(R.id.trailer_block);
+        mContentBlock = (RelativeLayout) findViewById(R.id.content_block);
+        mReviewsBlock = (RelativeLayout) findViewById(R.id.reviews_block);
+        mPosterView = (ImageView) findViewById(R.id.poster_imageview);
+        mOverviewView = (TextView) findViewById(R.id.overview_textview);
+        mVoteAverageView = (TextView) findViewById(R.id.vote_average_textview);
+        mReleaseDateView = (TextView) findViewById(R.id.release_date_textview);
+        mVoteAverageBar = (RatingBar) findViewById(R.id.vote_average_ratingbar);
+        mBudgetView = (TextView) findViewById(R.id.budget_textview);
+        mHomepageView = (TextView) findViewById(R.id.homepage_textview);
+        mTaglineView = (TextView) findViewById(R.id.tagline_textview);
+        mGenresView = (TextView) findViewById(R.id.genres_textview);
+        mProductionCompaniesView = (TextView) findViewById(R.id.production_companies_textview);
     }
 
     @Override
@@ -141,18 +170,34 @@ public class DetailActivity extends AppCompatActivity {
         if (intentThatStartedThisActivity != null) {
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
                 mMovieInfo = (HashMap) intentThatStartedThisActivity.getSerializableExtra(Intent.EXTRA_TEXT);
-                int movieId = Integer.parseInt ((String) mMovieInfo.get("id"));
+                setTitle((String) mMovieInfo.get("title"));
+                initializeYouTubePlayer();
+                int movieId = Integer.parseInt((String) mMovieInfo.get("id"));
                 AddMovieViewModelFactory factory = new AddMovieViewModelFactory(mDatabase, movieId);
                 final AddMovieViewModel viewModel
-                        = ViewModelProviders.of(this, factory).get(AddTaskViewModel.class);
-
-
-
-                new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
+                        = ViewModelProviders.of(this, factory).get(AddMovieViewModel.class);
+                viewModel.getMovie().observe(this, new Observer<MovieEntry>() {
+                    @Override
+                    public void onChanged(@Nullable MovieEntry movieEntry) {
+                        viewModel.getMovie().removeObserver(this);
+                        loadUI(movieEntry);
+                    }
+                });
             } else {
                 showErrorMessage();
                 Log.e(TAG, "Missing information in intent. Can't load content");
             }
+        }
+    }
+
+    private void loadUI(MovieEntry movieEntry) {
+        if (movieEntry == null) {
+            mFavorite = false;
+            new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
+        } else {
+            mFavorite = true;
+            mCurrentMovieEntry = movieEntry;
+            populateUI(mCurrentMovieEntry);
         }
     }
 
@@ -274,7 +319,6 @@ public class DetailActivity extends AppCompatActivity {
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-
         private void loadMovieDetails() {
             if (mMovieDetails != null && mMovieInfo != null) {
                 int id = Integer.parseInt((String) mMovieInfo.get("id"));
@@ -302,91 +346,84 @@ public class DetailActivity extends AppCompatActivity {
                 ArrayList<String> videoArray = (ArrayList<String>) mMovieDetails.get("videos");
                 LinkedHashMap reviewsHash = (LinkedHashMap) mMovieDetails.get("reviews");
 
-                setTitle((String) mMovieInfo.get("title"));
-                initializeYouTubePlayer();
-                ImageView posterView = (ImageView) findViewById(R.id.poster_imageview);
-                TextView overviewView = (TextView) findViewById(R.id.overview_textview);
-                TextView voteAverageView = (TextView) findViewById(R.id.vote_average_textview);
-                TextView releaseDateView = (TextView) findViewById(R.id.release_date_textview);
-                RatingBar voteAverageBar = (RatingBar) findViewById(R.id.vote_average_ratingbar);
-                TextView budgetView = (TextView) findViewById(R.id.budget_textview);
-                TextView homepageView = (TextView) findViewById(R.id.homepage_textview);
-                TextView taglineView = (TextView) findViewById(R.id.tagline_textview);
-                TextView genresView = (TextView) findViewById(R.id.genres_textview);
-                TextView productionCompaniesView = (TextView) findViewById(R.id.production_companies_textview);
-
-                trailersLoad(videoArray);
-                reviewsLoad(reviewsHash);
-
-                Picasso.get().load(posterUrl).into(posterView);
-                setElementToView(R.string.description_descriptor, overview, overviewView);
-                voteAverageBar.setRating(voteAverageRounded / 2);
-                setElementToView(R.string.vote_average_descriptor, voteAverage, voteAverageView);
-                setElementToView(R.string.release_date_descriptor, parsedReleaseDate, releaseDateView);
-                setElementToView(R.string.budget_descriptor, budget, budgetView);
-                setElementToView(homepage, homepageView);
-                setElementToView(tagline, taglineView);
-                setElementToView(R.string.genres_descriptor, genres, genresView);
-                setElementToView(R.string.producers_descriptor, productionCompanies, productionCompaniesView);
-                showContentBlock();
-
-                Bitmap bitmap = ((BitmapDrawable) posterView.getDrawable()).getBitmap();
+                Picasso.get().load(posterUrl).into(mPosterView);
+                Bitmap bitmap = ((BitmapDrawable) mPosterView.getDrawable()).getBitmap();
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 byte[] posterInByte = baos.toByteArray();
 
                 mCurrentMovieEntry = new MovieEntry(id, videoArray, title,
                         tagline, posterInByte, parsedReleaseDate, genres, budget, productionCompanies,
-                        homepage, voteAverageRounded.toString(), overview, reviewsHash);
+                        homepage, voteAverage, voteAverageRounded, overview, reviewsHash);
+
+                populateUI(mCurrentMovieEntry);
             }
         }
+    }
 
-        private void trailersLoad(ArrayList<String> videoArray) {
-            if (!videoArray.isEmpty() && mYouTubePlayer != null) {
-                mYouTubePlayer.cueVideo(videoArray.get(0));
-                mTrailersAdapter.setMoviesData(videoArray);
-                showTrailerBlock();
-                if (videoArray.size() < 2) {
-                    mTrailersRecyclerView.setVisibility(View.GONE);
-                }
-            } else if (mConfigurationHasChanged) {
-                mTrailersAdapter.setMoviesData(videoArray);
-                showTrailerBlock();
-            }
+    private void populateUI(MovieEntry movieEntry) {
+        if (mFavorite) {
+            Bitmap bmp = BitmapFactory.decodeByteArray(movieEntry.poster, 0, movieEntry.poster.length);
+            mPosterView.setImageBitmap(bmp);
         }
+        trailersLoad(movieEntry.videoArray);
+        reviewsLoad(movieEntry.reviewHash);
+        setElementToView(R.string.description_descriptor, movieEntry.overview, mOverviewView);
+        mVoteAverageBar.setRating(movieEntry.voteAverageRounded / 2);
+        setElementToView(R.string.vote_average_descriptor, movieEntry.voteAverage, mVoteAverageView);
+        setElementToView(R.string.release_date_descriptor, movieEntry.parsedReleaseDate, mReleaseDateView);
+        setElementToView(R.string.budget_descriptor, movieEntry.budget, mBudgetView);
+        setElementToView(movieEntry.homepage, mHomepageView);
+        setElementToView(movieEntry.tagline, mTaglineView);
+        setElementToView(R.string.genres_descriptor, movieEntry.genres, mGenresView);
+        setElementToView(R.string.producers_descriptor, movieEntry.productionCompanies, mProductionCompaniesView);
+        showContentBlock();
+    }
 
-        private void reviewsLoad(LinkedHashMap reviewsHash) {
-            if (!reviewsHash.isEmpty()) {
-                mReviewsRecyclerView = (RecyclerView) findViewById(R.id.reviews_recycler_view);
-                mReviewsRecyclerView.setHasFixedSize(true);
-
-                mReviewsLayoutManager = new LinearLayoutManager(getParent());
-                mReviewsRecyclerView.setLayoutManager(mReviewsLayoutManager);
-
-                mReviewsAdapter = new ReviewsAdapter(reviewsHash);
-                mReviewsRecyclerView.setAdapter(mReviewsAdapter);
-
-                mReviewsBlock.setVisibility(View.VISIBLE);
+    private void trailersLoad(ArrayList<String> videoArray) {
+        if (!videoArray.isEmpty() && mYouTubePlayer != null) {
+            mYouTubePlayer.cueVideo(videoArray.get(0));
+            mTrailersAdapter.setMoviesData(videoArray);
+            showTrailerBlock();
+            if (videoArray.size() < 2) {
+                mTrailersRecyclerView.setVisibility(View.GONE);
             }
+        } else if (mConfigurationHasChanged) {
+            mTrailersAdapter.setMoviesData(videoArray);
+            showTrailerBlock();
         }
+    }
 
-        private void setElementToView(String text, TextView textview) {
-            if (!text.isEmpty() && !text.equals("null") && !text.equals("0")) {
-                textview.setText(text);
-            } else {
-                textview.setVisibility(View.GONE);
-            }
+    private void reviewsLoad(LinkedHashMap reviewsHash) {
+        if (!reviewsHash.isEmpty()) {
+            mReviewsRecyclerView = (RecyclerView) findViewById(R.id.reviews_recycler_view);
+            mReviewsRecyclerView.setHasFixedSize(true);
+
+            mReviewsLayoutManager = new LinearLayoutManager(getParent());
+            mReviewsRecyclerView.setLayoutManager(mReviewsLayoutManager);
+
+            mReviewsAdapter = new ReviewsAdapter(reviewsHash);
+            mReviewsRecyclerView.setAdapter(mReviewsAdapter);
+
+            mReviewsBlock.setVisibility(View.VISIBLE);
         }
+    }
 
-        private void setElementToView(int descriptor_id, String text, TextView textview) {
-            if (!text.isEmpty() && !text.equals("null") && !text.equals("$0.00")) {
-                String descriptor = getResources().getString(descriptor_id);
-                textview.setText(Html.fromHtml("<b>" + descriptor + "</b>" + "&nbsp;" + text));
-            } else {
-                textview.setVisibility(View.GONE);
-            }
+    private void setElementToView(String text, TextView textview) {
+        if (!text.isEmpty() && !text.equals("null") && !text.equals("0")) {
+            textview.setText(text);
+        } else {
+            textview.setVisibility(View.GONE);
         }
+    }
 
+    private void setElementToView(int descriptor_id, String text, TextView textview) {
+        if (!text.isEmpty() && !text.equals("null") && !text.equals("$0.00")) {
+            String descriptor = getResources().getString(descriptor_id);
+            textview.setText(Html.fromHtml("<b>" + descriptor + "</b>" + "&nbsp;" + text));
+        } else {
+            textview.setVisibility(View.GONE);
+        }
     }
 
 }

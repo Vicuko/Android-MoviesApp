@@ -23,7 +23,8 @@ public class MovieEntry {
     public String budget;
     public String productionCompanies;
     public String homepage;
-    public String voteAverageRounded;
+    public String voteAverage;
+    public Float voteAverageRounded;
     public String overview;
     public LinkedHashMap reviewHash;
 
@@ -37,7 +38,8 @@ public class MovieEntry {
                        String budget,
                        String productionCompanies,
                        String homepage,
-                       String voteAverageRounded,
+                       String voteAverage,
+                       Float voteAverageRounded,
                        String overview,
                        LinkedHashMap reviewHash) {
 
@@ -51,6 +53,7 @@ public class MovieEntry {
         this.budget = budget;
         this.productionCompanies = productionCompanies;
         this.homepage = homepage;
+        this.voteAverage = voteAverage;
         this.voteAverageRounded = voteAverageRounded;
         this.overview = overview;
         this.reviewHash = reviewHash;
