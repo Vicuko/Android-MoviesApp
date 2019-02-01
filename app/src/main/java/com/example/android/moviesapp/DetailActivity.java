@@ -179,8 +179,6 @@ public class DetailActivity extends AppCompatActivity {
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
                 mMovieInfo = (HashMap) intentThatStartedThisActivity.getSerializableExtra(Intent.EXTRA_TEXT);
                 int movieId = Integer.parseInt((String) mMovieInfo.get("id"));
-                setTitle((String) mMovieInfo.get("title"));
-                initializeYouTubePlayer();
 
                 AddMovieViewModelFactory factory = new AddMovieViewModelFactory(mDatabase, movieId);
                 final AddMovieViewModel viewModel
@@ -188,6 +186,8 @@ public class DetailActivity extends AppCompatActivity {
                 viewModel.getMovie().observe(this, new Observer<MovieEntry>() {
                     @Override
                     public void onChanged(@Nullable MovieEntry movieEntry) {
+                        setTitle((String) mMovieInfo.get("title"));
+                        initializeYouTubePlayer();
                         if (movieEntry == null) {
                             mFavorite = false;
                             if (!(mMenuFavorite==null)) {
@@ -261,11 +261,11 @@ public class DetailActivity extends AppCompatActivity {
 
     private void showTrailerBlock() {
         mTrailerBlock.setVisibility(View.VISIBLE);
-        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+        mErrorMessageDisplay.setVisibility(View.GONE);
     }
 
     private void hideTrailerBlock() {
-        mTrailerBlock.setVisibility(View.INVISIBLE);
+        mTrailerBlock.setVisibility(View.GONE);
     }
 
     private void showContentBlock() {
