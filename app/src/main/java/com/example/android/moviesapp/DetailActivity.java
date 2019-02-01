@@ -57,8 +57,10 @@ public class DetailActivity extends AppCompatActivity {
     private HashMap mMovieDetails;
     private MovieEntry mCurrentMovieEntry;
 
+    private boolean mFavorite;
+    private MenuItem mMenuFavorite;
+
     private AppDatabase mDatabase;
-    private Menu mMenu;
 
     private ProgressBar mLoadingIndicator;
     private TextView mErrorMessageDisplay;
@@ -91,8 +93,6 @@ public class DetailActivity extends AppCompatActivity {
     private boolean mConfigurationHasChanged;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private boolean mFavorite;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +100,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         mDatabase = AppDatabase.getInstance(getApplicationContext());
         initViews();
+        setUpRecyclerView();
 
         mConfigurationHasChanged = false;
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_detail_layout);
@@ -109,7 +110,6 @@ public class DetailActivity extends AppCompatActivity {
                 processIntent();
             }
         });
-        processIntent();
     }
 
     private void initViews() {
@@ -133,7 +133,9 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.detail_menu, menu);
-        mMenu = menu;
+        mMenuFavorite = menu.findItem(R.id.action_favorite);
+        processIntent();
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -141,25 +143,23 @@ public class DetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_favorite) {
+            int resource;
+            if (!mFavorite) {
+                resource = R.drawable.ic_baseline_star;
+            } else {
+                resource = R.drawable.ic_baseline_star_border;
+            }
+            item.setIcon(resource);
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
-                    int resource;
                     if (!mFavorite) {
                         mDatabase.movieDao().insertMovie(mCurrentMovieEntry);
-                        resource = R.drawable.ic_baseline_star;
                         mFavorite = true;
                     } else {
                         mDatabase.movieDao().deleteMovie(mCurrentMovieEntry);
-                        resource = R.drawable.ic_baseline_star_border;
                         mFavorite = false;
                     }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            item.setIcon(resource);
-                        }
-                    });
                 }
             });
 
@@ -178,15 +178,30 @@ public class DetailActivity extends AppCompatActivity {
         if (intentThatStartedThisActivity != null) {
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
                 mMovieInfo = (HashMap) intentThatStartedThisActivity.getSerializableExtra(Intent.EXTRA_TEXT);
+                int movieId = Integer.parseInt((String) mMovieInfo.get("id"));
                 setTitle((String) mMovieInfo.get("title"));
                 initializeYouTubePlayer();
-                int movieId = Integer.parseInt((String) mMovieInfo.get("id"));
+
                 AddMovieViewModelFactory factory = new AddMovieViewModelFactory(mDatabase, movieId);
                 final AddMovieViewModel viewModel
                         = ViewModelProviders.of(this, factory).get(AddMovieViewModel.class);
                 viewModel.getMovie().observe(this, new Observer<MovieEntry>() {
                     @Override
                     public void onChanged(@Nullable MovieEntry movieEntry) {
+                        if (movieEntry == null) {
+                            mFavorite = false;
+                            if (!(mMenuFavorite==null)) {
+                                mMenuFavorite.setIcon(R.drawable.ic_baseline_star_border);
+                                mMenuFavorite.setVisible(true);
+                            }
+                        }
+                        else {
+                            mFavorite = true;
+                            if (!(mMenuFavorite==null)) {
+                                mMenuFavorite.setIcon(R.drawable.ic_baseline_star);
+                                mMenuFavorite.setVisible(true);
+                            }
+                        }
                         viewModel.getMovie().removeObserver(this);
                         loadUI(movieEntry);
                     }
@@ -223,7 +238,6 @@ public class DetailActivity extends AppCompatActivity {
                     mYouTubePlayer = player;
                     mYouTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
                     hideTrailerBlock();
-                    setUpRecyclerView();
                 }
             }
 
@@ -324,6 +338,7 @@ public class DetailActivity extends AppCompatActivity {
             } else {
                 showErrorMessage();
             }
+//          TODO => Make the refresh icon disappear when refreshing using the info from the db + Toast when there is no internet connection
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
@@ -370,13 +385,9 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void populateUI(MovieEntry movieEntry) {
-        MenuItem favorite = mMenu.findItem(R.id.action_favorite);
         if (mFavorite) {
-            favorite.setIcon(R.drawable.ic_baseline_star);
             Bitmap bmp = BitmapFactory.decodeByteArray(movieEntry.poster, 0, movieEntry.poster.length);
             mPosterView.setImageBitmap(bmp);
-        }else{
-            favorite.setIcon(R.drawable.ic_baseline_star_border);
         }
         trailersLoad(movieEntry.videoArray);
         reviewsLoad(movieEntry.reviewHash);
