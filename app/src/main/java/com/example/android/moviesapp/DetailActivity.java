@@ -101,6 +101,7 @@ public class DetailActivity extends AppCompatActivity {
         mDatabase = AppDatabase.getInstance(getApplicationContext());
         initViews();
         setUpRecyclerView();
+        initializeYouTubePlayer();
 
         mConfigurationHasChanged = false;
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_detail_layout);
@@ -178,6 +179,7 @@ public class DetailActivity extends AppCompatActivity {
         if (intentThatStartedThisActivity != null) {
             if (intentThatStartedThisActivity.hasExtra(Intent.EXTRA_TEXT)) {
                 mMovieInfo = (HashMap) intentThatStartedThisActivity.getSerializableExtra(Intent.EXTRA_TEXT);
+                setTitle((String) mMovieInfo.get("title"));
                 int movieId = Integer.parseInt((String) mMovieInfo.get("id"));
 
                 AddMovieViewModelFactory factory = new AddMovieViewModelFactory(mDatabase, movieId);
@@ -186,8 +188,6 @@ public class DetailActivity extends AppCompatActivity {
                 viewModel.getMovie().observe(this, new Observer<MovieEntry>() {
                     @Override
                     public void onChanged(@Nullable MovieEntry movieEntry) {
-                        setTitle((String) mMovieInfo.get("title"));
-                        initializeYouTubePlayer();
                         if (movieEntry == null) {
                             mFavorite = false;
                             if (!(mMenuFavorite==null)) {
@@ -237,7 +237,6 @@ public class DetailActivity extends AppCompatActivity {
                 if (!wasRestored) {
                     mYouTubePlayer = player;
                     mYouTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-                    hideTrailerBlock();
                 }
             }
 
@@ -404,10 +403,13 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void trailersLoad(ArrayList<String> videoArray) {
-        if (!videoArray.isEmpty() && mYouTubePlayer != null) {
-            mYouTubePlayer.cueVideo(videoArray.get(0));
+        if (!videoArray.isEmpty()) {
             mTrailersAdapter.setMoviesData(videoArray);
+            if (mYouTubePlayer != null){
+                mYouTubePlayer.cueVideo(videoArray.get(0));
+            }
             showTrailerBlock();
+
             if (videoArray.size() < 2) {
                 mTrailersRecyclerView.setVisibility(View.GONE);
             }
