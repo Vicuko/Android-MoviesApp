@@ -101,7 +101,6 @@ public class DetailActivity extends AppCompatActivity {
         mDatabase = AppDatabase.getInstance(getApplicationContext());
         initViews();
         setUpRecyclerView();
-        initializeYouTubePlayer();
 
         mConfigurationHasChanged = false;
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_detail_layout);
@@ -136,7 +135,6 @@ public class DetailActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.detail_menu, menu);
         mMenuFavorite = menu.findItem(R.id.action_favorite);
         processIntent();
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -190,14 +188,13 @@ public class DetailActivity extends AppCompatActivity {
                     public void onChanged(@Nullable MovieEntry movieEntry) {
                         if (movieEntry == null) {
                             mFavorite = false;
-                            if (!(mMenuFavorite==null)) {
+                            if (!(mMenuFavorite == null)) {
                                 mMenuFavorite.setIcon(R.drawable.ic_baseline_star_border);
                                 mMenuFavorite.setVisible(true);
                             }
-                        }
-                        else {
+                        } else {
                             mFavorite = true;
-                            if (!(mMenuFavorite==null)) {
+                            if (!(mMenuFavorite == null)) {
                                 mMenuFavorite.setIcon(R.drawable.ic_baseline_star);
                                 mMenuFavorite.setVisible(true);
                             }
@@ -224,7 +221,7 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    private void initializeYouTubePlayer() {
+    private void initializeYouTubePlayer(ArrayList<String> videoArray) {
         String api_key = getApplicationContext().getResources().getString(R.string.youtube_api_key);
         mYouTubePlayerFragment = (YouTubePlayerFragment) getFragmentManager().findFragmentById(R.id.trailer_youtube_view);
 
@@ -238,7 +235,19 @@ public class DetailActivity extends AppCompatActivity {
                     mYouTubePlayer = player;
                     mYouTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
                 }
+                showTrailerBlock();
+                if (!videoArray.isEmpty() && mYouTubePlayer != null) {
+                    mTrailersAdapter.setMoviesData(videoArray);
+                    mYouTubePlayer.cueVideo(videoArray.get(0));
+
+                    if (videoArray.size() < 2) {
+                        mTrailersRecyclerView.setVisibility(View.GONE);
+                    }
+                } else if (mConfigurationHasChanged) {
+                    mTrailersAdapter.setMoviesData(videoArray);
+                }
             }
+
 
             @Override
             public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
@@ -333,7 +342,8 @@ public class DetailActivity extends AppCompatActivity {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (movieDetails != null) {
                 mMovieDetails = movieDetails;
-                loadMovieDetails();
+                MovieEntry movieEntry = getMovieDetails();
+                if (movieEntry!=null) populateUI(movieEntry);
             } else {
                 showErrorMessage();
             }
@@ -341,7 +351,7 @@ public class DetailActivity extends AppCompatActivity {
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
-        private void loadMovieDetails() {
+        private MovieEntry getMovieDetails() {
             if (mMovieDetails != null && mMovieInfo != null) {
                 int id = Integer.parseInt((String) mMovieInfo.get("id"));
                 String title = (String) mMovieInfo.get("title");
@@ -374,11 +384,14 @@ public class DetailActivity extends AppCompatActivity {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 byte[] posterInByte = baos.toByteArray();
 
-                mCurrentMovieEntry = new MovieEntry(id, videoArray, title,
+                MovieEntry movieEntry = new MovieEntry(id, videoArray, title,
                         tagline, posterInByte, parsedReleaseDate, genres, budget, productionCompanies,
                         homepage, voteAverage, voteAverageRounded, overview, reviewsHash);
 
-                populateUI(mCurrentMovieEntry);
+                mCurrentMovieEntry = movieEntry;
+                return movieEntry;
+            } else {
+                return null;
             }
         }
     }
@@ -388,7 +401,7 @@ public class DetailActivity extends AppCompatActivity {
             Bitmap bmp = BitmapFactory.decodeByteArray(movieEntry.poster, 0, movieEntry.poster.length);
             mPosterView.setImageBitmap(bmp);
         }
-        trailersLoad(movieEntry.videoArray);
+        initializeYouTubePlayer(movieEntry.videoArray);
         reviewsLoad(movieEntry.reviewHash);
         setElementToView(R.string.description_descriptor, movieEntry.overview, mOverviewView);
         mVoteAverageBar.setRating(movieEntry.voteAverageRounded / 2);
@@ -400,23 +413,6 @@ public class DetailActivity extends AppCompatActivity {
         setElementToView(R.string.genres_descriptor, movieEntry.genres, mGenresView);
         setElementToView(R.string.producers_descriptor, movieEntry.productionCompanies, mProductionCompaniesView);
         showContentBlock();
-    }
-
-    private void trailersLoad(ArrayList<String> videoArray) {
-        if (!videoArray.isEmpty()) {
-            mTrailersAdapter.setMoviesData(videoArray);
-            if (mYouTubePlayer != null){
-                mYouTubePlayer.cueVideo(videoArray.get(0));
-            }
-            showTrailerBlock();
-
-            if (videoArray.size() < 2) {
-                mTrailersRecyclerView.setVisibility(View.GONE);
-            }
-        } else if (mConfigurationHasChanged) {
-            mTrailersAdapter.setMoviesData(videoArray);
-            showTrailerBlock();
-        }
     }
 
     private void reviewsLoad(LinkedHashMap reviewsHash) {
