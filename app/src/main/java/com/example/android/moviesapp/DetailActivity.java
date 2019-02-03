@@ -2,11 +2,14 @@ package com.example.android.moviesapp;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -53,6 +56,7 @@ import java.util.Locale;
 public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
+
     private HashMap mMovieInfo;
     private HashMap mMovieDetails;
     private MovieEntry mCurrentMovieEntry;
@@ -110,6 +114,14 @@ public class DetailActivity extends AppCompatActivity {
                 processIntent();
             }
         });
+    }
+
+    private boolean isConnected() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connectivityManager != null;
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        return (activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting());
     }
 
     private void initViews() {
@@ -213,7 +225,14 @@ public class DetailActivity extends AppCompatActivity {
     private void loadUI(MovieEntry movieEntry) {
         if (movieEntry == null) {
             new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
-        } else {
+        }
+        else if (mSwipeRefreshLayout.isRefreshing()){
+            if (
+
+            return activeNetworkInfo != null;)
+            new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
+        }
+        else {
             mCurrentMovieEntry = movieEntry;
             populateUI(mCurrentMovieEntry);
         }
@@ -345,7 +364,6 @@ public class DetailActivity extends AppCompatActivity {
             } else {
                 showErrorMessage();
             }
-//          TODO => Make the refresh icon disappear when refreshing using the info from the db + Toast when there is no internet connection
             mSwipeRefreshLayout.setRefreshing(false);
         }
 
