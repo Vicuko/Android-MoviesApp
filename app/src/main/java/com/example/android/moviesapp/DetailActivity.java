@@ -231,6 +231,7 @@ public class DetailActivity extends AppCompatActivity {
                 new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
             } else {
                 Toast.makeText(this, this.getText(R.string.no_internet_to_refresh), Toast.LENGTH_LONG).show();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
         } else {
