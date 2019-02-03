@@ -31,6 +31,7 @@
 
     <!--Strings for activity_main layout-->
     <string name="non_loading_message">There has been an error, please check your Internet connection and try again</string>
+    <string name="no_favorites_message">Sorry, but it seems you haven\'t starred any movie as favorite</string>
 
     <!--Strings for activity_detail layout-->
     <string name="trailer_button">Trailer\ </string>
