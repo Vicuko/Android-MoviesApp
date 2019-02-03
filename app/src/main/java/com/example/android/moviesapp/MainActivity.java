@@ -1,31 +1,38 @@
 package com.example.android.moviesapp;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.android.moviesapp.database.MovieEntry;
 import com.example.android.moviesapp.utilities.MoviesJsonUtils;
 import com.example.android.moviesapp.utilities.NetworkUtils;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 
 import static android.widget.GridLayout.VERTICAL;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     private RecyclerView mRecyclerView;
 
     private MoviesAdapter mMoviesAdapter;
@@ -35,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private ProgressBar mLoadingIndicator;
 
     private String mFilterCriteria;
+    private boolean mShowingFavorite;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
@@ -42,10 +50,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
+        mShowingFavorite = false;
         updateFilterCriteria();
         setRefreshLayout();
         setTitle(getSelectionTitle(mFilterCriteria));
-        loadMovies(mFilterCriteria);
+        loadMovies();
     }
 
     private void initViews() {
@@ -67,28 +76,49 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             @Override
             public void onRefresh() {
                 updateFilterCriteria();
-                loadUI();
+                loadMovies();
             }
         });
     }
 
-    private void loadUI() {
-
-        new FetchMoviesTask().execute(mFilterCriteria);
+    private void loadMovies() {
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getMovies().observe(this, new Observer<List<MovieEntry>>() {
+            @Override
+            public void onChanged(@Nullable List<MovieEntry> movieEntries) {
+                Log.d(TAG, "Updating list of movies from LiveData in ViewModel");
+                showPosters();
+                if (movieEntries != null && mShowingFavorite) {
+                    if (movieEntries.isEmpty()) {
+                        showErrorMessage(getString(R.string.no_favorites_message));
+                    } else {
+                        mMoviesAdapter.setMoviesData(movieEntries);
+                    }
+                } else if (movieEntries == null && mShowingFavorite) {
+                    showErrorMessage(getString(R.string.general_error_message));
+                } else {
+                    new FetchMoviesTask().execute(mFilterCriteria);
+                }
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         updateFilterCriteria();
-        loadUI();
+        loadMovies();
     }
 
-    private void updateFilterCriteria (){
+    private void updateFilterCriteria() {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         mFilterCriteria = sharedPrefs.getString(
                 getString(R.string.criteria_key),
                 getString(R.string.criteria_default));
+        String favorite_option = getResources().getStringArray(R.array.criteria_values)[4];
+        if (mFilterCriteria.equals(favorite_option)) {
+            mShowingFavorite = true;
+        }
     }
 
     private String getSelectionTitle(String preferenceValue) {
@@ -102,19 +132,12 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         return (String) this.getApplicationInfo().loadLabel(this.getPackageManager());
     }
 
-    private void loadMovies(String filter_criteria) {
-        showPosters();
-        new FetchMoviesTask().execute(filter_criteria);
-    }
-
-    ;
-
     private void showPosters() {
         mErrorMessageDisplay.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    private void showErrorMessage() {
+    private void showErrorMessage(String errorText) {
         mRecyclerView.setVisibility(View.GONE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
@@ -184,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                 showPosters();
                 mMoviesAdapter.setMoviesData(moviesData);
             } else {
-                showErrorMessage();
+                showErrorMessage(getString(R.string.non_loading_message));
             }
             mSwipeRefreshLayout.setRefreshing(false);
         }

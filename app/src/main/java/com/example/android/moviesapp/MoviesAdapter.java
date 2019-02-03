@@ -1,6 +1,8 @@
 package com.example.android.moviesapp;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,9 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.android.moviesapp.database.MovieEntry;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Vicuko on 27/7/18.
@@ -18,6 +22,7 @@ import java.util.HashMap;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
     private HashMap[] mMoviesData;
+    private List<MovieEntry> mMovieEntries;
 
     private final MoviesAdapterOnClickHandler mClickHandler;
 
@@ -41,7 +46,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         @Override
         public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
-            HashMap dataForDetail = mMoviesData[adapterPosition];
+            HashMap dataForDetail = new HashMap();
+            if (mMovieEntries != null){
+                MovieEntry movieEntry = mMovieEntries.get(adapterPosition);
+                dataForDetail.put("id",String.valueOf(movieEntry.id));
+                dataForDetail.put("title",movieEntry.title);
+            } else{
+                dataForDetail = mMoviesData[adapterPosition];
+            }
             mClickHandler.onClick(dataForDetail);
         }
     }
@@ -61,19 +73,36 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     @Override
     public void onBindViewHolder(@NonNull MoviesAdapterViewHolder holder, int position) {
         final String MOVIE_POSTER_URL = "poster_url";
-        HashMap movieData = mMoviesData[position];
-        String posterUrlForThisMovie = (String) movieData.get(MOVIE_POSTER_URL);
-        Picasso.get().load(posterUrlForThisMovie).into(holder.mMovieImageView);
+        if (mMovieEntries == null) {
+            HashMap movieData = mMoviesData[position];
+            String posterUrlForThisMovie = (String) movieData.get(MOVIE_POSTER_URL);
+            Picasso.get().load(posterUrlForThisMovie).into(holder.mMovieImageView);
+        }else{
+            MovieEntry movieEntry = mMovieEntries.get(position);
+            Bitmap bmp = BitmapFactory.decodeByteArray(movieEntry.poster, 0, movieEntry.poster.length);
+            holder.mMovieImageView.setImageBitmap(bmp);
+        }
     }
 
     @Override
     public int getItemCount() {
-        if (null == mMoviesData) return 0;
+        if (mMoviesData == null && mMovieEntries == null) {
+            return 0;
+        }
+        else if(mMovieEntries != null){
+            return mMovieEntries.size();
+        }
         return mMoviesData.length;
     }
 
     public void setMoviesData(HashMap[] moviesData) {
         mMoviesData = moviesData;
+        mMovieEntries = null;
+        notifyDataSetChanged();
+    }
+
+    public void setMoviesData(List<MovieEntry> movieEntries) {
+        mMovieEntries = movieEntries;
         notifyDataSetChanged();
     }
 }
