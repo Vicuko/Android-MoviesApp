@@ -212,10 +212,8 @@ public class DetailActivity extends AppCompatActivity {
 
     private void loadUI(MovieEntry movieEntry) {
         if (movieEntry == null) {
-            mFavorite = false;
             new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
         } else {
-            mFavorite = true;
             mCurrentMovieEntry = movieEntry;
             populateUI(mCurrentMovieEntry);
         }
