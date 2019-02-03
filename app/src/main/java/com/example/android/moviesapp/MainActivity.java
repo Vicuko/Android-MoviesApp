@@ -93,8 +93,14 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                         showErrorMessage(getString(R.string.no_favorites_message));
                     } else {
                         mMoviesAdapter.setMoviesData(movieEntries);
+                        if (mSwipeRefreshLayout.isRefreshing()) {
+                            mSwipeRefreshLayout.setRefreshing(false);
+                        }
                     }
                 } else if (movieEntries == null && mShowingFavorite) {
+                    if (mSwipeRefreshLayout.isRefreshing()) {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
                     showErrorMessage(getString(R.string.general_error_message));
                 } else {
                     new FetchMoviesTask().execute(mFilterCriteria);
@@ -175,7 +181,9 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
+            if (!mSwipeRefreshLayout.isRefreshing()) {
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+            }
         }
 
         @Override
@@ -203,14 +211,19 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
         @Override
         protected void onPostExecute(HashMap[] moviesData) {
-            mLoadingIndicator.setVisibility(View.GONE);
+            if (!mSwipeRefreshLayout.isRefreshing()) {
+                mLoadingIndicator.setVisibility(View.GONE);
+            } else {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+
             if (moviesData != null) {
                 showPosters();
                 mMoviesAdapter.setMoviesData(moviesData);
             } else {
                 showErrorMessage(getString(R.string.non_loading_message));
             }
-            mSwipeRefreshLayout.setRefreshing(false);
+
         }
     }
 }
