@@ -41,16 +41,14 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initViews();
+        updateFilterCriteria();
+        setRefreshLayout();
+        setTitle(getSelectionTitle(mFilterCriteria));
+        loadMovies(mFilterCriteria);
+    }
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                updateFilterCriteria();
-                new FetchMoviesTask().execute(mFilterCriteria);
-            }
-        });
-
+    private void initViews() {
         mErrorMessageDisplay = (TextView) findViewById(R.id.error_message_display);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
         mRecyclerView = (RecyclerView) findViewById(R.id.movies_recycler_view);
@@ -61,11 +59,21 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
         mMoviesAdapter = new MoviesAdapter(this);
         mRecyclerView.setAdapter(mMoviesAdapter);
+    }
 
-        updateFilterCriteria();
-        String activityTitle = getSelectionTitle(mFilterCriteria);
-        setTitle(activityTitle);
-        loadMovies(mFilterCriteria);
+    private void setRefreshLayout() {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateFilterCriteria();
+                loadUI();
+            }
+        });
+    }
+
+    private void loadUI() {
+        new FetchMoviesTask().execute(mFilterCriteria);
     }
 
     @Override
