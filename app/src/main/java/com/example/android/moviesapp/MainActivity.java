@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     private void showErrorMessage(String errorText) {
         mRecyclerView.setVisibility(View.GONE);
+        mErrorMessageDisplay.setText(errorText);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
