@@ -226,16 +226,14 @@ public class DetailActivity extends AppCompatActivity {
     private void loadUI(MovieEntry movieEntry) {
         if (movieEntry == null) {
             new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
-        }
-        else if (mSwipeRefreshLayout.isRefreshing()){
-            if (isConnected()){
+        } else if (mSwipeRefreshLayout.isRefreshing()) {
+            if (isConnected()) {
                 new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
             } else {
-                Toast.makeText(this,this.getText(R.string.no_internet_to_refresh),Toast.LENGTH_LONG).show();
+                Toast.makeText(this, this.getText(R.string.no_internet_to_refresh), Toast.LENGTH_LONG).show();
             }
 
-        }
-        else {
+        } else {
             mCurrentMovieEntry = movieEntry;
             populateUI(mCurrentMovieEntry);
         }
@@ -312,7 +310,9 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
+            if (!mSwipeRefreshLayout.isRefreshing()) {
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+            }
         }
 
         @RequiresApi(api = Build.VERSION_CODES.O)
@@ -359,11 +359,23 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(HashMap movieDetails) {
-            mLoadingIndicator.setVisibility(View.GONE);
+            if (!mSwipeRefreshLayout.isRefreshing()) {
+                mLoadingIndicator.setVisibility(View.GONE);
+            }
             if (movieDetails != null) {
                 mMovieDetails = movieDetails;
                 MovieEntry movieEntry = getMovieDetails();
-                if (movieEntry!=null) populateUI(movieEntry);
+                if (movieEntry != null) {
+                    populateUI(movieEntry);
+                    if (mSwipeRefreshLayout.isRefreshing()) {
+                        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                mDatabase.movieDao().updateMovie(movieEntry);
+                            }
+                        });
+                    }
+                }
             } else {
                 showErrorMessage();
             }
