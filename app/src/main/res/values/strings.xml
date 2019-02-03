@@ -39,6 +39,7 @@
     <string name="vote_average_descriptor">Vote average:</string>
     <string name="release_date_descriptor">Release date:</string>
     <string name="description_descriptor">Description:</string>
+    <string name="no_internet_to_refresh">Sorry, there doesn\'t seem to be an internet connection to refresh the content</string>
 
     <!--Strings for reviews content-->
     <string name="movie_reviews_title">Movie Reviews</string>

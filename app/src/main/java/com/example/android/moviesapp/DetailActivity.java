@@ -30,6 +30,7 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.moviesapp.database.AppDatabase;
 import com.example.android.moviesapp.database.MovieEntry;
@@ -227,10 +228,12 @@ public class DetailActivity extends AppCompatActivity {
             new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
         }
         else if (mSwipeRefreshLayout.isRefreshing()){
-            if (
+            if (isConnected()){
+                new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
+            } else {
+                Toast.makeText(this,this.getText(R.string.no_internet_to_refresh),Toast.LENGTH_LONG).show();
+            }
 
-            return activeNetworkInfo != null;)
-            new FetchDetailsTask().execute((String) mMovieInfo.get("id"));
         }
         else {
             mCurrentMovieEntry = movieEntry;
