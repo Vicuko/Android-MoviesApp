@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     }
 
     private void loadUI() {
+
         new FetchMoviesTask().execute(mFilterCriteria);
     }
 
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     protected void onResume() {
         super.onResume();
         updateFilterCriteria();
-        new FetchMoviesTask().execute(mFilterCriteria);
+        loadUI();
     }
 
     private void updateFilterCriteria (){
