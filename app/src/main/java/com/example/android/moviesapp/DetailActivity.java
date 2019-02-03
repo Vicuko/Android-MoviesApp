@@ -278,12 +278,12 @@ public class DetailActivity extends AppCompatActivity {
 
     private void showContentBlock() {
         mContentBlock.setVisibility(View.VISIBLE);
-        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+        mErrorMessageDisplay.setVisibility(View.GONE);
     }
 
     private void showErrorMessage() {
-        mTrailerBlock.setVisibility(View.INVISIBLE);
-        mContentBlock.setVisibility(View.INVISIBLE);
+        mTrailerBlock.setVisibility(View.GONE);
+        mContentBlock.setVisibility(View.GONE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
@@ -339,7 +339,7 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(HashMap movieDetails) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            mLoadingIndicator.setVisibility(View.GONE);
             if (movieDetails != null) {
                 mMovieDetails = movieDetails;
                 MovieEntry movieEntry = getMovieDetails();
