@@ -18,12 +18,14 @@
         <item>Most popular</item>
         <item>Top rated</item>
         <item>Upcoming</item>
+        <item>Favorites</item>
     </string-array>
     <string-array name="criteria_values">
         <item>now_playing</item>
         <item>popular</item>
         <item>top_rated</item>
         <item>upcoming</item>
+        <item>favorites</item>
     </string-array>
     <string name="criteria_default">now_playing</string>
 
