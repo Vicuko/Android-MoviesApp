@@ -101,12 +101,12 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     ;
 
     private void showPosters() {
-        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
+        mErrorMessageDisplay.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage() {
-        mRecyclerView.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.GONE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
         @Override
         protected void onPostExecute(HashMap[] moviesData) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            mLoadingIndicator.setVisibility(View.GONE);
             if (moviesData != null) {
                 showPosters();
                 mMoviesAdapter.setMoviesData(moviesData);

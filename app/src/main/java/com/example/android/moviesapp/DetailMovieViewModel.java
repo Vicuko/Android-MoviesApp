@@ -9,11 +9,11 @@ import com.example.android.moviesapp.database.MovieEntry;
 /**
  * Created by Vicuko on 31/1/19.
  */
-class AddMovieViewModel extends ViewModel {
+class DetailMovieViewModel extends ViewModel {
 
     private LiveData<MovieEntry> movie;
 
-    public AddMovieViewModel(AppDatabase database, int movieId) {
+    public DetailMovieViewModel(AppDatabase database, int movieId) {
         movie = database.movieDao().loadMovieById(movieId);
     }
 

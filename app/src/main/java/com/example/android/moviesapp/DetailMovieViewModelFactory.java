@@ -8,12 +8,12 @@ import com.example.android.moviesapp.database.AppDatabase;
 /**
  * Created by Vicuko on 31/1/19.
  */
-class AddMovieViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+class DetailMovieViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     private final AppDatabase mAppDatabase;
     private final int mTaskId;
 
-    public AddMovieViewModelFactory(AppDatabase database, int taskId) {
+    public DetailMovieViewModelFactory(AppDatabase database, int taskId) {
         mAppDatabase = database;
         mTaskId = taskId;
     }
@@ -21,7 +21,7 @@ class AddMovieViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
         //noinspection unchecked
-        return (T) new AddMovieViewModel(mAppDatabase, mTaskId);
+        return (T) new DetailMovieViewModel(mAppDatabase, mTaskId);
     }
 
 }

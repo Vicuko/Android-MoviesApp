@@ -193,9 +193,9 @@ public class DetailActivity extends AppCompatActivity {
                 setTitle((String) mMovieInfo.get("title"));
                 int movieId = Integer.parseInt((String) mMovieInfo.get("id"));
 
-                AddMovieViewModelFactory factory = new AddMovieViewModelFactory(mDatabase, movieId);
-                final AddMovieViewModel viewModel
-                        = ViewModelProviders.of(this, factory).get(AddMovieViewModel.class);
+                DetailMovieViewModelFactory factory = new DetailMovieViewModelFactory(mDatabase, movieId);
+                final DetailMovieViewModel viewModel
+                        = ViewModelProviders.of(this, factory).get(DetailMovieViewModel.class);
                 viewModel.getMovie().observe(this, new Observer<MovieEntry>() {
                     @Override
                     public void onChanged(@Nullable MovieEntry movieEntry) {
