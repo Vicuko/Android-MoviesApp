@@ -97,11 +97,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                             mSwipeRefreshLayout.setRefreshing(false);
                         }
                     }
-                } else if (movieEntries == null && mShowingFavorite) {
-                    if (mSwipeRefreshLayout.isRefreshing()) {
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                    showErrorMessage(getString(R.string.general_error_message));
                 } else {
                     new FetchMoviesTask().execute(mFilterCriteria);
                 }
