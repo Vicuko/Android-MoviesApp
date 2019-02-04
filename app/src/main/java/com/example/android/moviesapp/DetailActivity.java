@@ -265,6 +265,8 @@ public class DetailActivity extends AppCompatActivity {
                     }
                 } else if (mConfigurationHasChanged) {
                     mTrailersAdapter.setMoviesData(videoArray);
+                } else {
+                    hideTrailerBlock();
                 }
             }
 

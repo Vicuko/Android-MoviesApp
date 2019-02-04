@@ -49,7 +49,7 @@
                     android:id="@+id/trailer_block"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone">
+                    android:visibility="invisible">
 
                     <fragment
                         android:id="@+id/trailer_youtube_view"
