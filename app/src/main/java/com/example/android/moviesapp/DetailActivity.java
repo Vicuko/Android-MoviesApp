@@ -238,6 +238,7 @@ public class DetailActivity extends AppCompatActivity {
             mCurrentMovieEntry = movieEntry;
             populateUI(mCurrentMovieEntry);
         }
+        mTrailerBlock.requestFocus(View.FOCUS_UP);
     }
 
     private void initializeYouTubePlayer(ArrayList<String> videoArray) {
