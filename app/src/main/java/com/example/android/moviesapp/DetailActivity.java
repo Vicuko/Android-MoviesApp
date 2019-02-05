@@ -105,7 +105,6 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         mDatabase = AppDatabase.getInstance(getApplicationContext());
         initViews();
-        setUpRecyclerView();
 
         mConfigurationHasChanged = false;
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_detail_layout);
@@ -254,6 +253,7 @@ public class DetailActivity extends AppCompatActivity {
                 if (!wasRestored) {
                     mYouTubePlayer = player;
                     mYouTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+                    setUpRecyclerView();
                 }
                 showTrailerBlock();
                 if (!videoArray.isEmpty() && mYouTubePlayer != null) {
